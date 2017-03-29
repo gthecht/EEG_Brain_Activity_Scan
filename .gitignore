@@ -1,0 +1,4 @@
+# This is git ignore file.
+
+# Temp files:
+*.asv

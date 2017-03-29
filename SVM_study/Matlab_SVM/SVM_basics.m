@@ -4,8 +4,9 @@
 %different points.
 
 close all;
-clear all;
+clear;
 clc;
+
 disp(' SVM, using normal distribution of two classes with');
 disp('means around different points.');
 disp('-----------------------------------------------------');
@@ -13,42 +14,49 @@ disp('-----------------------------------------------------');
 %% two normally distributed groups around different points
 
 %number of points for each class:
-n1=1000;
+n1      = 1000;
 %class A:
-m_a= [-2,1];    %mean of A
-s_a= 2;     %sigma of A
-A_class= s_a*randn(n1,2)+ones(n1,1)*m_a;  %vector of class A
+m_a     = [-2;
+            1];   %mean of A
+s_a     = 2;      %sigma of A
+A_class = s_a * randn(n1,2) + ones(n1,1) * m_a';  %vector of class A
+       %= bsxfun(@plus, M, v);
 
 %class B:
-m_b= [3,-2];    %mean of B
-s_b= 1;     %sigma of B
-B_class= s_b*randn(n1,2)+ones(n1,1)*m_b;  %vector of class B
+m_b     = [3,-2];    %mean of B
+s_b     = 1;     %sigma of B
+B_class = s_b*randn(n1,2) + ones(n1,1) * m_b;  %vector of class B
 
 %plot A and B on xy graph:
-figure(1)
-scatter(A_class(:,1),A_class(:,2),15,'b','filled');
-%scatter(A_class(:,1),A_class(:,2),20,'+');
-hold on;
-scatter(B_class(:,1),B_class(:,2),15,'r','filled');
+figure(1); hold on;
+scatter(A_class(:,1), A_class(:,2), 15, 'b', 'filled');
+scatter(B_class(:,1), B_class(:,2), 15, 'r', 'filled');
 title('classes A B over XY');
 xlabel('x');
 ylabel('y');
-legend('A','B');
+legend('A', 'B');
+
+%%
+train_AB = [A_class; B_class];
+% label_AB = [ones(n1,1); -ones(n1,1)];
+label_AB = label_AB(randperm(2*n1));
+mData    = [train_AB, label_AB];
 
 %% Training the SVM with two classes A and B:
-train_AB = [A_class;B_class];
-label_AB = [ones(n1,1);-ones(n1,1)];
-SVM_AB_model = fitcsvm(train_AB,label_AB);
+train_AB     = [A_class; B_class];
+
+SVM_AB_model = fitcsvm(train_AB, label_AB);
 
 %find the areas of each class
-max_x = max(abs(train_AB(:,1)));
-max_y = max(abs(train_AB(:,2)));
-k= 1000; %number of points in mesh
-mesh_x = linspace(-max_x,max_x,k);
-mesh_y = linspace(-max_y,max_y,k);
-[X,~] = meshgrid(mesh_x);
-[~,Y] = meshgrid(mesh_y);
-[~,score_AB] = predict(SVM_AB_model,[X(:),Y(:)]);
+vMax = max(abs(train_AB));
+% max_x  = max(abs(train_AB(:,1)));
+% max_y  = max(abs(train_AB(:,2)));
+k      = 1000; %number of points in mesh
+mesh_x = vMax(1) * linspace(-1, 1, k);
+mesh_y = vMax(2) * linspace(-1, 1, k);
+[X, Y] = meshgrid(mesh_x, mesh_y);
+
+[~, score_AB] = predict(SVM_AB_model,[X(:),Y(:)]);
 reshaped_score_AB = reshape(score_AB(:,2),size(X));
 
 %% Plotting SVM and A and B:
