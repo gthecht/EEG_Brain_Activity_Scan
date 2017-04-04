@@ -17,9 +17,9 @@ nice_fruit_gray = [fruit_gray ;249 * ones(1,615)];
 % imshow(nice_fruit_gray);
 
 %We'll start without overlapping images
-n = 41;                                    % number of pieces (divides by 3)
-piece_size = [410,15];
-puzzle_pieces = zeros(410,15,n);
+n = 15;                                    % number of pieces (divides by 3)
+piece_size = [410,41];
+puzzle_pieces = zeros(410,41,n);
 
 figure(2);
 title('puzzle pieces 15');
@@ -32,12 +32,13 @@ for ii = 1:n
 end;
 
 %% Overlapping puzzle pieces:
-m = n-1;
-overlapping_pieces =  zeros(410 , 15 * 2,m);
+m = n-3;
+overlapping_pieces =  zeros(410 , 41 * 4,m);
 figure(3);
-title('overlapping pieces (9x4)');
+title('overlapping pieces');
 for ii = 1:m
-	overlapping_pieces(:,:, ii) = [puzzle_pieces(:,:, ii), puzzle_pieces(:,:, ii+1)];
+	overlapping_pieces(:,:, ii) = [puzzle_pieces(:,:, ii), puzzle_pieces(:,:, ii+1),...
+                                puzzle_pieces(:,:, ii+2), puzzle_pieces(:,:, ii+3)];
     subplot(1,m, ii);      % Showing puzzle pieces
 	%imshow(uint8(current_puzzle_piece));
 	imshow(uint8(overlapping_pieces(:,:, ii))); % checking to see that all's ok
@@ -69,8 +70,8 @@ end;
 %[~,ind] = sort(mdiff_dist(2,:));
 figure(4)
 for ii = 1:m
-    subplot(1,m, ii);      
-    imshow(uint8(overlapping_pieces(:,:, indices(ii,2))));
+    subplot(1,m, m+1-ii);      
+    imshow(uint8(overlapping_pieces(:,:, indices(ii,4))));
 end;
 
 
