@@ -2,3 +2,7 @@
 
 # Temp files:
 *.asv
+
+#powerpoints:
+*.pptx
+*.ppt
