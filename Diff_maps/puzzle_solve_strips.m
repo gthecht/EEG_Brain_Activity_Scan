@@ -13,8 +13,8 @@ fruit_orig = imread('Fruit_bowl_orig.jpg'); % original image
 fruit_gray = rgb2gray(fruit_orig);          % grayscale image
 nice_fruit_gray = [fruit_gray ;249 * ones(1,615)];
 
-% figure(1);
-% imshow(nice_fruit_gray);
+ figure(1);
+ imshow(nice_fruit_gray);
 
 %We'll start without overlapping images
 n = 15;                                    % number of pieces (divides by 3)
@@ -70,9 +70,17 @@ end;
 %[~,ind] = sort(mdiff_dist(2,:));
 figure(4)
 for ii = 1:m
-    subplot(1,m, m+1-ii);      
-    imshow(uint8(overlapping_pieces(:,:, indices(ii,4))));
+        subplot(1,m, m+1-ii);      
+        imshow(uint8(overlapping_pieces(:,:, indices(ii,4))));
 end;
+
+% for dim_i = 1:5
+%     for ii = 1:m
+%         figure(dim_i+3)
+%         subplot(1,m, m+1-ii);      
+%         imshow(uint8(overlapping_pieces(:,:, indices(ii,dim_i))));
+%     end;
+% end;
 
 
 
