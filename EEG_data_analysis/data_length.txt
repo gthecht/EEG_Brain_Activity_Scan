@@ -1,0 +1,12 @@
+% lengths for EEG_data\Project_Sample_Data\data\C04\1
+
+data_length1  = 299;
+data_length2  = 300;
+data_length1  = 299;
+
+data_length11 = 480;
+data_length12 = 120;
+data_length13 = 476;
+data_length14 = 124;
+data_length15 = 476;
+data_length16 = 124;
