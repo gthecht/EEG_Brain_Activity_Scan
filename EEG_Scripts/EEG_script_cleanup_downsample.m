@@ -1,7 +1,6 @@
 %% Gilad Hecht and Ronen Rahamim, May 16th 2017
-% In this script we'll run the two  functions we created earlier to cut the
-% data between the relevant times, and we'll try to delete the bad
-% electrodes from our data for each stim and each repeat of the experiment.
+% In this script we'll run the eeg_cleanup function we created earlier to 
+% cut the data between the relevant times.
 
 clear;
 clc;
@@ -13,8 +12,7 @@ clc;
 
 prompt={'Enter the place you want to take the files from:',...
     'Enter the place you want to place the clean files:',...
-    'Enter the place you want to take EEG_cleanup function from:',...
-    'Enter the place you want to take total_std function from:'};
+    'Enter the place you want to take EEG_cleanup function from:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
 
@@ -23,12 +21,10 @@ directories      = inputdlg(prompt,title);
 data_direct      = directories{1};
 clean_direct     = directories{2};
 cleanfunc_direct = directories{3};
-stdfunc_direct   = directories{4};
 
 cellfun(@(x) addpath(x), directories);
 cd (clean_direct)
 %% Cleaning the data and downsampling it
-
 
 allfiles = dir(data_direct);
 allnames = {allfiles.name}.';

@@ -29,7 +29,7 @@ clean_data = dnsmpl_dat(dnsmpl_t >= 0);
 
 % We'll save it only if 'save= true'
 if save_it == true
-    save(name,clean_data);     %saves it in the current directory,
+    save(name,'clean_data');     %saves it in the current directory,
                                 % or rather, the one written in 'name'
 end
 end
