@@ -1,10 +1,10 @@
-function [ good_electrodes, bad_times_per_elec ] = ...
+function [ good_electrodes, bad_electrodes, bad_times_per_elec ] = ...
     local_std( elec_dat, window_len, eta, error_threshold, save_it, name )
 % local_std: checks the relative local std. returns which electrodes are
 % good, using the formula: (x-mu)/sig^2 < eta, eta can be chosen, or if
 % not, it is 3.
 
-% Input variables:
+%%  Input variables:
 % % elec_dat:   data of all electrodes, in time. Taken to be sampled at 
 %               1kHz, and beginning at t=0.
 % % window_len: scalar double -  length of window in which we take the std
@@ -13,7 +13,8 @@ function [ good_electrodes, bad_times_per_elec ] = ...
 % % allowed_error: double - number of bad spots we allow per electrode.
 % % save_it:    boolian - whether to save it or not
 % % name:       string - name in which we'll save it.
-% % good_electrodes: the data of the good electrodes.
+% % good_electrodes: list of good electrodes.
+% %  bad_electrodes: list of bad electrodes.
 % % bad_times_per_elec: returns the bad areas 
 
 %% check if input is correct:
@@ -31,7 +32,7 @@ catch
     bad_times_per_elec = [];
     return;
 end
-% chekcing eta
+% checking eta
 if size(eta,1) == 0
     eta = 3;
     disp('using defualt eta := 3');
@@ -66,15 +67,15 @@ bad_places = abs(data_corr) > eta;
 
 % Good electrodes
 good_indx  = (sum(bad_places,2) < error_threshold);
-good_electrodes = elec_dat(good_indx,:);
+good_electrodes = find(good_indx);
 
 %% and info on bad ones
-Bad_electrodes  = find(~good_indx);
-bad_elec_num   = size(Bad_electrodes,1);
+bad_electrodes  = find(~good_indx);
+bad_elec_num   = size(bad_electrodes,1);
 %  We want to find the time in which we have problems. Therefore, we'll
 %  add up the sum of bad_places, and then find the peaks, which will be the
 %  problematic times.
-bad_conv        = conv2(bad_places(Bad_electrodes,:), ones_window,'same');
+bad_conv        = conv2(bad_places(bad_electrodes,:), ones_window,'same');
 bad_conv_trans  = bad_conv.'; % we transpose so that when we take the whole 
                              % mat as a vector, we will take it row by row.
 [~,times_peaks] = findpeaks( (bad_conv_trans(:)));
@@ -86,17 +87,17 @@ bad_times_per_elec         = cell(bad_elec_num,2);
 
 for ii = 1: bad_elec_num
     bad_times_per_elec{ii,2} = elec_pks(elec_pks(:,1) == ii,2);
-    bad_times_per_elec{ii,1} = ii;
+    bad_times_per_elec{ii,1} = bad_electrodes(ii);
 end
 
 %% And finally we'll save the data
 
-bad_electrodes = cell2table(bad_times_per_elec, 'VariableNames', ...
+bad_elec_tbl = cell2table(bad_times_per_elec, 'VariableNames', ...
                                         {'Electrode', 'Problematic_times'});
 % We'll save it only if 'save= true'
 if save_it == true
     filename = ['bad_electrodes_dat_of_',name,'.txt'];
-    writetable(bad_electrodes , filename, 'Delimiter', '\t');
+    writetable(bad_elec_tbl , filename, 'Delimiter', '\t');
 end
 
 end
