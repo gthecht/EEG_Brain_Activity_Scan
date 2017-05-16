@@ -8,30 +8,41 @@ clc;
 
 %% adding the path to the data and to the functions
 
-addpath('C:\Users\Ronen\Documents\BrainStorm\brainstormdb\EEG_data\Project_Sample_Data\data\C04\1') % the whole data of C04 only
-addpath('D:\Project1\EEG_code\Prepare_signal')          % where the function "eeg_cleanup" is
-% addpath('D:\Project1\EEG_code\Finding_good_electrodes') % where the function "local_std" is
+% data_direct  = inputdlg('Where do you want to take the files from?\n','data directory');        % the place we'll take our data from
+% clean_direct = inputdlg('Where do you want to place the clean files?\n','cleanup directory');   % the place we'll save our cleaned data
 
-%% Loading the data
+prompt={'Enter the place you want to take the files from:',...
+    'Enter the place you want to place the clean files:',...
+    'Enter the place you want to take EEG_cleanup function from:',...
+    'Enter the place you want to take total_std function from:'};
+title  = 'Directories';
+directories      = inputdlg(prompt,title);
 
-somatosensory_trials = (1:299)';                            % number of repeats 
-data_Stim_1_orig     = cell(size(somatosensory_trials));    % each row is a repeat from the experiment
-data_Stim_1_clean    = cell(size(somatosensory_trials));    % each row will be a clean repeat from the experiment
+%% Splitting directories
 
-for ii = somatosensory_trials'
-    data_Stim_1_str  = sprintf('data_Stim_1_trial%.3d.mat', ii);
-    temp_struct      = load(data_Stim_1_str, 'F');
-%     data_Stim_1_clean{ii} = eeg_cleanup([temp_struct.F]);
-    data_Stim_1_orig{ii} = [temp_struct.F];
+data_direct      = directories{1};
+clean_direct     = directories{2};
+cleanfunc_direct = directories{3};
+stdfunc_direct   = directories{4};
+
+cellfun(@(x) addpath(x), directories);
+cd (clean_direct)
+%% Cleaning the data and downsampling it
+
+
+allfiles = dir(data_direct);
+allnames = {allfiles.name}.';
+N = length(allnames);
+for ii=1:N
+    good_str = ~isempty(strfind(allnames{ii},'trial'));
+    if good_str == 1
+        tmp_trial = load(allnames{ii});
+        str_split = strsplit(allnames{ii},'.');
+        new_name  = [str_split{1}, '_clean.mat'];
+        eeg_cleanup(tmp_trial, 1, new_name );
+    end
+        
 end
-
-%% adding the path to function "eeg_cleanup"
-
-addpath('D:\Project1\EEG_code\Prepare_signal')          % where the function "eeg_cleanup" is
-
-%% Cutting each repeat in the stims
-
-data_Stim_1_clean = cell(size(somatosensory_trials));    % each row will be a clean repeat from the experiment
 
 
 

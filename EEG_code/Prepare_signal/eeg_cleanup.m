@@ -17,7 +17,7 @@ catch
     return;
 end
 %% now we want to down-sample to 1kHz:
-dt         = mean(data_t(2:end) - data_t(1:end-1));
+dt         = median(data_t(2:end) - data_t(1:end-1));
 dnsmpl     = round(0.001/dt);
 
 dnsmpl_dat = downsample(data_F',dnsmpl)';
@@ -29,7 +29,7 @@ clean_data = dnsmpl_dat(dnsmpl_t >= 0);
 
 % We'll save it only if 'save= true'
 if save_it == true
-    save (name,clean_data);     %saves it in the current directory,
+    save(name,clean_data);     %saves it in the current directory,
                                 % or rather, the one written in 'name'
 end
 end
