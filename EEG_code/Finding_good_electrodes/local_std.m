@@ -55,7 +55,7 @@ ones_window = ones(1,window_len);
 std_filted = stdfilt(elec_dat,ones_window);
 
 % finding local median:
-med_filted = medfilt2(elec_dat, [1,window_len]);
+med_filted = medfilt1(elec_dat, window_len);
 
 % finding the 'correlation':
 data_corr  = (elec_dat - med_filted) ./ std_filted;
