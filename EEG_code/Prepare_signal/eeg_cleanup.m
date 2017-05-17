@@ -25,7 +25,7 @@ dnsmpl_t   = downsample(data_t',dnsmpl)';
 
 %% And finally we want to cut off the signa; before t=0:
 
-clean_data = dnsmpl_dat(dnsmpl_t >= 0);
+clean_data = dnsmpl_dat(:,dnsmpl_t >= 0);
 
 % We'll save it only if 'save= true'
 if save_it == true
