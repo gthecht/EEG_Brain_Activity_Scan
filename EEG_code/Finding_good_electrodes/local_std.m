@@ -75,7 +75,7 @@ bad_elec_num   = size(bad_electrodes,1);
 %  We want to find the time in which we have problems. Therefore, we'll
 %  add up the sum of bad_places, and then find the peaks, which will be the
 %  problematic times.
-bad_conv        = conv2(bad_places(bad_electrodes,:), ones_window,'same');
+bad_conv        = conv2(double(bad_places(bad_electrodes,:)), ones_window,'same');
 bad_conv_trans  = bad_conv.'; % we transpose so that when we take the whole 
                              % mat as a vector, we will take it row by row.
 if isempty(bad_electrodes)
