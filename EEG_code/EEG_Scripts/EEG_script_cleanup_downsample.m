@@ -12,7 +12,7 @@ clc;
 
 prompt={'Enter the place you want to take the files from:',...
     'Enter the place you want to place the clean files:',...
-    'Enter the place you want to take EEG_cleanup function from:'};
+    'Enter code folder:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
 
@@ -20,10 +20,11 @@ directories      = inputdlg(prompt,title);
 
 data_direct      = directories{1};
 clean_direct     = directories{2};
-cleanfunc_direct = directories{3};
-
+code_direct      = genpath(directories{3});
+                            % adds all subfolders of code to path.
+addpath(code_direct)
 cellfun(@(x) addpath(x), directories);
-cd (clean_direct)
+cd(clean_direct);
 %% Cleaning the data and downsampling it
 
 allfiles = dir(data_direct);

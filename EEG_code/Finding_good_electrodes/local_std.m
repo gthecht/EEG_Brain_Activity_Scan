@@ -1,5 +1,5 @@
 function [ good_electrodes, bad_electrodes, bad_times_per_elec ] = ...
-    local_std( elec_dat, window_len, eta, error_threshold, save_it, name )
+    local_std( elec_dat, window_len, eta, error_threshold, save_it, show_it, name )
 % local_std: checks the relative local std. returns which electrodes are
 % good, using the formula: (x-mu)/sig^2 < eta, eta can be chosen, or if
 % not, it is 3.
@@ -33,12 +33,12 @@ catch
     return;
 end
 % checking eta
-if size(eta,1) == 0
+if isempty(eta)
     eta = 3;
     disp('using defualt eta := 3');
 end
 % checking window_len
-if size(window_len,1) == 0
+if isempty(window_len) == 0
     window_len = 31;
     disp('using defualt window length := 31');
 end
@@ -50,7 +50,7 @@ if mod(window_len,2) == 0
 end
 %% calculating local std:
 
-time_len = size(elec_dat,2);
+[elec_num, time_len] = size(elec_dat);
 ones_window = ones(1,window_len);
 std_filted = stdfilt(elec_dat,ones_window);
 
@@ -78,6 +78,15 @@ bad_elec_num   = size(bad_electrodes,1);
 bad_conv        = conv2(bad_places(bad_electrodes,:), ones_window,'same');
 bad_conv_trans  = bad_conv.'; % we transpose so that when we take the whole 
                              % mat as a vector, we will take it row by row.
+if isempty(bad_electrodes)
+    bad_times_per_elec = [];
+    if save_it == true
+        fileID = fopen(['bad_electrodes_dat_of_',name,'.txt'],'w');
+        fprintf(fileID, 'No bad electrodes');
+        fclose(fileID);
+    end
+    return;
+end
 [~,times_peaks] = findpeaks( (bad_conv_trans(:)));
 
 elec_pks   = [floor(times_peaks/time_len)+1, 0.001 * (mod(times_peaks-1,time_len))];  
@@ -100,5 +109,15 @@ if save_it == true
     writetable(bad_elec_tbl , filename, 'Delimiter', '\t');
 end
 
+%% figures:
+if show_it
+    bad_corr = data_corr(bad_electrodes,:);
+    [meshX, meshY] = meshgrid((1:time_len)/1000, bad_electrodes);
+    figure(100); scatter3(meshX(:),meshY(:), abs(bad_corr(:)),50,abs(bad_corr(:)));
+    title(['local correlation of bad electrodes of ', name]);
+    colorbar;
+    xlabel('t(sec)'); ylabel('electrode no.'); zlabel('std value in log_{10}');
+    savefig([name,'bad_local_corr']);
 end
 
+end

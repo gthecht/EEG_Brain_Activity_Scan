@@ -10,7 +10,7 @@ clc;
 
 prompt={'Enter the place you want to take the clean files from:',...
     'Enter the place you want to place the bad electrodes files:',...
-    'Enter the place you want to take find_good_electrodes function from:'};
+    'Enter code folder:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
 
@@ -18,8 +18,9 @@ directories      = inputdlg(prompt,title);
 
 clean_data_direct         = directories{1};
 bad_electrodes_direct     = directories{2};
-find_good_func_direct     = directories{3};
-
+code_direct      = genpath(directories{3});
+                            % adds all subfolders of code to path.
+addpath(code_direct)
 cellfun(@(x) addpath(x), directories);
 cd (bad_electrodes_direct)
 
@@ -30,8 +31,9 @@ allnames = {allfiles.name}.';
 N = length(allnames);
 window_len = 31;
 eta = 3;
-error_threshold = 2;
+error_threshold = 3;
 save_it = 1;
+show_it = 1;
 for ii=1:N
     good_str = ~isempty(strfind(allnames{ii},'trial'));
         if good_str == 1
@@ -39,7 +41,7 @@ for ii=1:N
             tmp_elec  = tmp_elec.clean_data;
             str_split = strsplit(allnames{ii},'_');
             new_name  = [str_split{1:end-1}];
-            find_good_electrodes(tmp_elec, window_len, eta, error_threshold, save_it, new_name );
+            find_good_electrodes(tmp_elec, window_len, eta, error_threshold, save_it, show_it, new_name );
 %           eeg_cleanup(tmp_trial, 1, new_name );
         end        
 end

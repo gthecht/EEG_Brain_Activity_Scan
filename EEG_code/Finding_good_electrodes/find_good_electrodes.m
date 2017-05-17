@@ -1,6 +1,6 @@
 function [good_electrodes_dat, bad_electrodes, bad_times_per_elec] = ...
     find_good_electrodes(  elec_dat, window_len, eta, error_threshold, ...
-                                                        save_it, name )
+                                                        save_it, show_it, name )
 % Finds and returns the data of the good electrodes, as well as a list of
 % the bad ones.
 
@@ -19,7 +19,7 @@ function [good_electrodes_dat, bad_electrodes, bad_times_per_elec] = ...
 
 %% local std:
 [good_loc, bad_loc, bad_times_per_elec] = ...
-    local_std( elec_dat, window_len, eta, error_threshold, save_it, name );
+    local_std( elec_dat, window_len, eta, error_threshold, save_it, show_it, name );
 
 %% total std:
 [good_all, bad_all] = total_std( elec_dat, eta, error_threshold );
