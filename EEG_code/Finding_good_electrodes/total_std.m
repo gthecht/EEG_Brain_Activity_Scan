@@ -26,9 +26,11 @@ end
 
 %% calculating std:
 std_all = std(elec_dat,0,2);
-med_all = median(elec_dat,2);
+% % % med_all = median(elec_dat,2);
+mean_all = mean(elec_dat,2);
 % finding the 'correlation':
-data_corr  = (elec_dat - repmat(med_all,1,size(elec_dat,2))) ./ repmat(std_all,1,size(elec_dat,2));
+% % % data_corr  = (elec_dat - repmat(med_all,1,size(elec_dat,2))) ./ repmat(std_all,1,size(elec_dat,2));
+data_corr  = (elec_dat - repmat(mean_all,1,size(elec_dat,2))) ./ repmat(std_all,1,size(elec_dat,2));
 % The places where we diverge from the wanted eta:
 bad_places = abs(data_corr) > eta;
 

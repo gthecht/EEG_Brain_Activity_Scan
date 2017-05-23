@@ -38,10 +38,10 @@ if isempty(eta)
     disp('using defualt eta := 3');
 end
 % checking window_len
-if isempty(window_len) == 0
-    window_len = 31;
-    disp('using defualt window length := 31');
-end
+% % % if isempty(window_len) == 0
+% % %     window_len = 31;
+% % %     disp('using defualt window length := 31');
+% % % end
 if mod(window_len,2) == 0
     disp('Error: window length must be odd!');
     disp('adding 1 to the length.');
@@ -51,14 +51,19 @@ end
 %% calculating local std:
 
 [elec_num, time_len] = size(elec_dat);
+% % % ones_window = ones(1,window_len);
 ones_window = ones(1,window_len);
 std_filted = stdfilt(elec_dat,ones_window);
 
-% finding local median:
-med_filted = medfilt1(elec_dat, window_len);
+% % % % finding local median:
+% % % med_filted = medfilt1(elec_dat, window_len);
+
+% finding local mean:
+mean_filted = imfilter(elec_dat, ones_window) / window_len;
 
 % finding the 'correlation':
-data_corr  = (elec_dat - med_filted) ./ std_filted;
+% % % data_corr  = (elec_dat - med_filted) ./ std_filted;
+data_corr  = (elec_dat - mean_filted) ./ std_filted;
 % The places where we diverge from the wanted eta:
 bad_places = abs(data_corr) > eta;
 
