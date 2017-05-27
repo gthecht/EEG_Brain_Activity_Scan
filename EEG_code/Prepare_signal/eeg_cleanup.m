@@ -1,4 +1,4 @@
-function [ clean_data ] = eeg_cleanup( data, save_it, name )
+function [ clean_data ] = eeg_cleanup( data, time, save_it, name )
 % eeg_cleanup: Recieves a struct of the type given by the EEG, takes the
 % signals, and the time, and cuts it so that the time is from 0 to 0.5.
 % Downsamples the data so that the frequency is 1KHz.
@@ -25,7 +25,7 @@ dnsmpl_t   = downsample(data_t',dnsmpl)';
 
 %% And finally we want to cut off the signa; before t=0:
 
-clean_data = dnsmpl_dat(:,dnsmpl_t >= 0);
+clean_data = dnsmpl_dat(:,dnsmpl_t >= time);
 
 % We'll save it only if 'save= true'
 if save_it == true

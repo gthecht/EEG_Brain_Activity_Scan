@@ -38,10 +38,10 @@ if isempty(eta)
     disp('using defualt eta := 3');
 end
 % checking window_len
-% % % if isempty(window_len) == 0
-% % %     window_len = 31;
-% % %     disp('using defualt window length := 31');
-% % % end
+if isempty(window_len)
+    window_len = 31;
+    disp('using defualt window length := 31');
+end
 if mod(window_len,2) == 0
     disp('Error: window length must be odd!');
     disp('adding 1 to the length.');
@@ -55,8 +55,9 @@ end
 ones_window = ones(1,window_len);
 std_filted = stdfilt(elec_dat,ones_window);
 
-% % % % finding local median:
+% finding local median:
 % % % med_filted = medfilt1(elec_dat, window_len);
+med_filted = repmat(median(abs(elec_dat),1), elec_num, 1);
 
 % finding local mean:
 mean_filted = imfilter(elec_dat, ones_window) / window_len;
@@ -67,15 +68,22 @@ data_corr  = (elec_dat - mean_filted) ./ std_filted;
 % The places where we diverge from the wanted eta:
 bad_places = abs(data_corr) > eta;
 
-%% And now for returning the good electrodes, and writing down the bad ones
-%  and the places they are bad in:
+%% And now we'll find the good electrodes
 
-% Good electrodes
-good_indx  = (sum(bad_places,2) < error_threshold);
-good_electrodes = find(good_indx);
+bad_by_median = abs(elec_dat) > 150*med_filted;
+local_bad_elec = sum(and(bad_by_median,bad_places), 2);
+good_electrodes = find(local_bad_elec == 0);
+
+% % % %% And now for returning the good electrodes, and writing down the bad ones
+% % % %  and the places they are bad in:
+% % % 
+% % % % Good electrodes
+% % % good_indx  = (sum(bad_places,2) < error_threshold);
+% % % good_electrodes = find(good_indx);
 
 %% and info on bad ones
-bad_electrodes  = find(~good_indx);
+bad_electrodes  = find(local_bad_elec > 0);
+% % % bad_electrodes  = find(~good_indx);
 bad_elec_num   = size(bad_electrodes,1);
 %  We want to find the time in which we have problems. Therefore, we'll
 %  add up the sum of bad_places, and then find the peaks, which will be the

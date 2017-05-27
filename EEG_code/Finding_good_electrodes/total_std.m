@@ -25,7 +25,9 @@ if size(eta,1) == 0
 end
 
 %% calculating std:
+[elec_num, time_len] = size(elec_dat);
 std_all = std(elec_dat,0,2);
+median_all = repmat(median(abs(elec_dat),1), elec_num, 1);
 % % % med_all = median(elec_dat,2);
 mean_all = mean(elec_dat,2);
 % finding the 'correlation':
@@ -34,9 +36,13 @@ data_corr  = (elec_dat - repmat(mean_all,1,size(elec_dat,2))) ./ repmat(std_all,
 % The places where we diverge from the wanted eta:
 bad_places = abs(data_corr) > eta;
 
-% Good electrodes
-good_indx       = (sum(bad_places,2) < error_threshold);
-good_electrodes = find(good_indx);
-bad_electrodes  = find(~good_indx);
+bad_by_median = abs(elec_dat) > 150*median_all;
+local_bad_elec = sum(and(bad_by_median,bad_places), 2);
+good_electrodes = find(local_bad_elec == 0);
+bad_electrodes = find(local_bad_elec > 0);
+% % % % Good electrodes
+% % % good_indx       = (sum(bad_places,2) < error_threshold);
+% % % good_electrodes = find(good_indx);
+% % % bad_electrodes  = find(~good_indx);
 end
 
