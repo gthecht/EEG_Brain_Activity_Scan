@@ -36,10 +36,11 @@ data_corr  = (elec_dat - repmat(mean_all,1,size(elec_dat,2))) ./ repmat(std_all,
 % The places where we diverge from the wanted eta:
 bad_places = abs(data_corr) > eta;
 
-bad_by_median = abs(elec_dat) > 150*median_all;
+bad_by_median = abs(elec_dat) > 50*median_all;
 local_bad_elec = sum(and(bad_by_median,bad_places), 2);
 good_electrodes = find(local_bad_elec == 0);
 bad_electrodes = find(local_bad_elec > 0);
+
 % % % % Good electrodes
 % % % good_indx       = (sum(bad_places,2) < error_threshold);
 % % % good_electrodes = find(good_indx);

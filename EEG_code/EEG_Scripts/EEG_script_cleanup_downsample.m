@@ -30,7 +30,7 @@ cd(clean_direct);
 allfiles = dir(data_direct);
 allnames = {allfiles.name}.';
 N = length(allnames);
-time_somatosensory = 0.007;
+time_somatosensory = 0;
 for ii=1:N
     good_str = ~isempty(strfind(allnames{ii},'trial'));
     if good_str == 1

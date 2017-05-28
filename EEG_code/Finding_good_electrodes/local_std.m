@@ -70,7 +70,7 @@ bad_places = abs(data_corr) > eta;
 
 %% And now we'll find the good electrodes
 
-bad_by_median = abs(elec_dat) > 150*med_filted;
+bad_by_median = abs(elec_dat) > 50*med_filted;
 local_bad_elec = sum(and(bad_by_median,bad_places), 2);
 good_electrodes = find(local_bad_elec == 0);
 
@@ -83,7 +83,7 @@ good_electrodes = find(local_bad_elec == 0);
 
 %% and info on bad ones
 bad_electrodes  = find(local_bad_elec > 0);
-% % % bad_electrodes  = find(~good_indx);
+% bad_electrodes  = find(~good_indx);
 bad_elec_num   = size(bad_electrodes,1);
 %  We want to find the time in which we have problems. Therefore, we'll
 %  add up the sum of bad_places, and then find the peaks, which will be the
