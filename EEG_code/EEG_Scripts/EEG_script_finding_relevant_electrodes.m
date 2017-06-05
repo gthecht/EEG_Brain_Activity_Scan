@@ -1,5 +1,5 @@
-%% Gilad Hecht and Ronen Rahamim, May 16th 2017
-% In this script we'll run find_good_electrodes function we created earlier
+%% Gilad Hecht and Ronen Rahamim, June 4th 2017
+% In this script we'll run find_relevant_electrodes function we created earlier
 % to delete the bad electrodes from our data for each stim and each repeat
 % of the experiment.
 
@@ -29,17 +29,12 @@ cd (bad_electrodes_direct)
 allfiles = dir(clean_data_direct);
 allnames = {allfiles.name}.';
 N = length(allnames);
-window_len = 31;
-eta = 5;                    % should work with 5
-error_threshold = 3;
-save_it = 0;
-show_it = 0;
 c = 0;
+threshold = 10000;
 num_of_electrodes = 68;
-good_electrodes = zeros(num_of_electrodes,N-2);    % for now, 299 is the 
-                                    % number of repeats in Stim1, and 68 is
-                                    %  the number of electrodes
+good_electrodes = zeros(num_of_electrodes,N-2);    
 [row_good, col_good] = size(good_electrodes);
+
 for ii=1:N
     good_str = ~isempty(strfind(allnames{ii},'trial'));
         if good_str == 1
@@ -48,8 +43,7 @@ for ii=1:N
             tmp_elec  = tmp_elec.clean_data;
             str_split = strsplit(allnames{ii},'_');
             new_name  = [str_split{1:end-1}];
-            good_electrodes_tmp = find_good_electrodes(tmp_elec,...
-                window_len, eta, error_threshold, save_it, show_it, new_name );
+            good_electrodes_tmp = find_relevant_electrodes(tmp_elec, threshold);
             size_tmp = length(good_electrodes_tmp);
             good_electrodes(:, c) = [good_electrodes_tmp;zeros(row_good-size_tmp, 1)];
         end        
@@ -63,20 +57,20 @@ end
 real_good_electrodes = intersect_elec(intersect_elec>0);
 save(['good_electrodes of_',str_split{2},'_',str_split{3},'.mat'],...
                                                 'real_good_electrodes');
-
-% Removing the bad electrodes of all repeats
-save_it = 1;
-for ii=1:N              % maybe in a general code that isn't run only on 
-                        % one Stim, we will change N to another value...
-    good_str = ~isempty(strfind(allnames{ii},'trial'));
-        if good_str == 1
-            tmp_elec  = load(allnames{ii});
-            tmp_elec  = tmp_elec.clean_data;
-            str_split = strsplit(allnames{ii},'_');
-            new_name  = [str_split{1:end-1},'_remove_bad.mat'];
-            remove_bad_elec(tmp_elec, real_good_electrodes, save_it, new_name )
-        end        
-end
+% 
+% % Removing the bad electrodes of all repeats
+% save_it = 1;
+% for ii=1:N              % maybe in a general code that isn't run only on 
+%                         % one Stim, we will change N to another value...
+%     good_str = ~isempty(strfind(allnames{ii},'trial'));
+%         if good_str == 1
+%             tmp_elec  = load(allnames{ii});
+%             tmp_elec  = tmp_elec.clean_data;
+%             str_split = strsplit(allnames{ii},'_');
+%             new_name  = [str_split{1:end-1},'_remove_bad.mat'];
+%             remove_bad_elec(tmp_elec, real_good_electrodes, save_it, new_name )
+%         end        
+% end
 
 
 
