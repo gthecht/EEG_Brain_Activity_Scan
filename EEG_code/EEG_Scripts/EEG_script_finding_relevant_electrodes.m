@@ -9,7 +9,7 @@ clc;
 %% adding the path to the data and to the functions
 
 prompt={'Enter the place you want to take the clean files from:',...
-    'Enter the place you want to place the bad electrodes files:',...
+    'Enter the place you want to place the relevant electrodes files:',...
     'Enter code folder:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
@@ -31,6 +31,8 @@ allnames = {allfiles.name}.';
 N = length(allnames);
 c = 0;
 threshold = 100;
+% std_bound = 7e-5;
+eta = 5;
 num_of_electrodes = 68;
 good_electrodes = zeros(num_of_electrodes,N-2);    
 [row_good, col_good] = size(good_electrodes);
@@ -43,7 +45,7 @@ for ii=1:N
             tmp_elec  = tmp_elec.clean_data;
             str_split = strsplit(allnames{ii},'_');
             new_name  = [str_split{1:end-1}];
-            good_electrodes_tmp = find_relevant_electrodes(tmp_elec, threshold);
+            good_electrodes_tmp = find_relevant_electrodes(tmp_elec, threshold, eta);
             size_tmp = length(good_electrodes_tmp);
             good_electrodes(:, c) = [good_electrodes_tmp;zeros(row_good-size_tmp, 1)];
         end        
@@ -57,20 +59,5 @@ end
 real_good_electrodes = intersect_elec(intersect_elec>0);
 save(['good_electrodes of_',str_split{2},'_',str_split{3},'.mat'],...
                                                 'real_good_electrodes');
-% 
-% % Removing the bad electrodes of all repeats
-% save_it = 1;
-% for ii=1:N              % maybe in a general code that isn't run only on 
-%                         % one Stim, we will change N to another value...
-%     good_str = ~isempty(strfind(allnames{ii},'trial'));
-%         if good_str == 1
-%             tmp_elec  = load(allnames{ii});
-%             tmp_elec  = tmp_elec.clean_data;
-%             str_split = strsplit(allnames{ii},'_');
-%             new_name  = [str_split{1:end-1},'_remove_bad.mat'];
-%             remove_bad_elec(tmp_elec, real_good_electrodes, save_it, new_name )
-%         end        
-% end
-
 
 

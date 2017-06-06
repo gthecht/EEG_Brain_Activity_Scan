@@ -45,7 +45,7 @@ for jj=3:col_good
 end
 
 total_good_electrodes = intersect_elec(intersect_elec>0);
-save('total_good_electrodes_of_C04', 'total_good_electrodes');
+save('total_good_electrodes_of_all', 'total_good_electrodes');
 
 
 

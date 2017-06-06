@@ -55,7 +55,7 @@ for ii=1:N
             tmp_elec  = load(allnames{ii});
             tmp_elec  = tmp_elec.clean_data;
             str_split = strsplit(allnames{ii},'_');
-            new_name  = [str_split{1:4},'_remove_bad.mat'];
+            new_name  = [str_split{1:end-1},'_remove_bad.mat'];
             remove_bad_elec(tmp_elec, total_good_electrodes, save_it, new_name )
         end        
 end
