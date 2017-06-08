@@ -4,7 +4,7 @@ function [ tang_point ] = tangent_map( X, T )
 
 % T^-1/2 = U*D^-1/2 * inv(U) where D is the diagonal matrix of T
 [VT, DT]  = eig(T);
-T_invsqrt = inv(VT) * diag(1./(sqrt(diag(DT)))) * VT;
+T_invsqrt = VT * diag(1./(sqrt(diag(DT)))) * inv(VT);
 
 [VX, DX]  = eig(T_invsqrt*X*T_invsqrt);
 logX      = VX * diag(log(diag(DX))) * inv(VX);
