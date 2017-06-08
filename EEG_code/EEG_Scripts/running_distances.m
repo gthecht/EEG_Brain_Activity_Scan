@@ -1,4 +1,7 @@
 %% Showing the distances together
+
+% typical branch on Gilad's disk_on_key:
+% D:\Project\EEG_Data\Data_with_median_clean_new\C04\2\distances
 %% adding the path to the data and to the functions
 prompt={'Enter the distances folder of first'...
         'Enter the distances folder of second'...
@@ -11,6 +14,10 @@ direct_3   = directories{3};
 
 cellfun(@(x) addpath(x), directories);
 
+%% understanding which people and stimulations these are:
+[ label1, index1 ] = find_typical( direct_1 );
+[ label2, index2 ] = find_typical( direct_2 );
+[ label3, index3 ] = find_typical( direct_3 );
 %%
 figure(1);
 cd(direct_1);
@@ -23,7 +30,7 @@ for ii = 1:N
         tmp_dist_mat = load(allnames{ii});
         field     = fieldnames(tmp_dist_mat);
         dist_mat   = getfield(tmp_dist_mat, field{1});
-        scatter3(dist_mat(1),dist_mat(2),dist_mat(3),50,1);
+        scatter3(dist_mat(index1),dist_mat(index2),dist_mat(index3),50,1);
         hold on;
     end
 end
@@ -38,7 +45,7 @@ for ii = 1:N
         tmp_dist_mat = load(allnames{ii});
         field     = fieldnames(tmp_dist_mat);
         dist_mat   = getfield(tmp_dist_mat, field{1});
-        scatter3(dist_mat(1),dist_mat(2),dist_mat(3),50,2);
+        scatter3(dist_mat(index1),dist_mat(index2),dist_mat(index3),50,2);
         hold on;
     end
 end
@@ -53,17 +60,11 @@ for ii = 1:N
         tmp_dist_mat = load(allnames{ii});
         field     = fieldnames(tmp_dist_mat);
         dist_mat   = getfield(tmp_dist_mat, field{1});
-        scatter3(dist_mat(1),dist_mat(2),dist_mat(3),50,3);
+        scatter3(dist_mat(index1),dist_mat(index2),dist_mat(index3),50,3);
         hold on;
     end
 end
 %%
-str_split1 = strsplit(direct_1,'\');
-str_split2 = strsplit(direct_2,'\');
-str_split3 = strsplit(direct_3,'\');
-label1     = [str_split1{end-2},' Stim',str_split1{end-1}];
-label2     = [str_split2{end-2},' Stim',str_split2{end-1}];
-label3     = [str_split3{end-2},' Stim',str_split3{end-1}];
 
 title('distances of points from typical covs');
 xlabel(['distance from mean of: ', label1]);
