@@ -57,17 +57,6 @@ for ii=1:N
         save(new_name, 'dist_vec');
     end    
 end
-%%  Now we can map them out:
-% if K == 2
-%     figure(1); scatter(distances(1,:), distances(2,:));
-%     title('scatter according to distance from given means');
-%     xlabel('distance from mean1'); ylabel('distance from mean2');
-% elseif K > 2
-%     figure(1); scatter3(distances(1,:), distances(2,:), distances(3,:));
-%     title('scatter according to distance from given means');
-%     xlabel('distance from mean1'); ylabel('distance from mean2'); 
-%     zlabel('distance from mean3');
-% end
 
 beep; pause(0.5); beep;
 

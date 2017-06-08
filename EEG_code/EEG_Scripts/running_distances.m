@@ -58,7 +58,14 @@ for ii = 1:N
     end
 end
 %%
-title('distances of stim1 trials from the means for each person');
-xlabel('distance from mean of C04');
-ylabel('distance from mean of C06');
-zlabel('distance from mean of C08');
+str_split1 = strsplit(direct_1,'\');
+str_split2 = strsplit(direct_2,'\');
+str_split3 = strsplit(direct_3,'\');
+label1     = [str_split1{end-2},' Stim',str_split1{end-1}];
+label2     = [str_split2{end-2},' Stim',str_split2{end-1}];
+label3     = [str_split3{end-2},' Stim',str_split3{end-1}];
+
+title('distances of points from typical covs');
+xlabel(['distance from mean of: ', label1]);
+ylabel(['distance from mean of: ', label2]);
+zlabel(['distance from mean of: ', label3]);
