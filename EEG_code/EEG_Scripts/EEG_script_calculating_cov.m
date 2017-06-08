@@ -8,8 +8,7 @@ clc;
 % clean_direct = inputdlg('Where do you want to place the clean files?\n','cleanup directory');   % the place we'll save our cleaned data
 
 prompt={'Enter the place you want to take the files from:',...
-    'Enter the place you want to place the correlation matrices in:',...
-    'Enter code folder:'};
+    'Enter the place you want to place the correlation matrices in:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
 
@@ -17,9 +16,7 @@ directories      = inputdlg(prompt,title);
 
 source_direct      = directories{1};
 dest_direct     = directories{2};
-code_direct      = genpath(directories{3});
-                            % adds all subfolders of code to path.
-addpath(code_direct)
+
 cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 %% Cleaning the data and downsampling it
@@ -38,3 +35,5 @@ for ii=1:N
     end
         
 end
+
+beep; pause(0.3); beep;

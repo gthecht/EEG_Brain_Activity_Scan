@@ -28,7 +28,8 @@ cov_3Dmat = zeros(N,rows, cols);
 for ii = 1: N
     cov_3Dmat(ii, :, :) =  cov_mats{ii};
 end
-curr_mean = squeeze(mean(cov_3Dmat,1));
+% curr_mean = squeeze(mean(cov_3Dmat,1));
+curr_mean = squeeze(cov_3Dmat(1,:,:));
 si = zeros(N,rows, cols);
 % Now for the iterative loop:
 for kk = 1:iter
@@ -36,8 +37,9 @@ for kk = 1:iter
         si(ii,:,:) = tangent_map(squeeze(cov_3Dmat(ii,:,:)),curr_mean); 
                         % the point on the tangent that fits the i'th trial
     end
-    euc_mean  = squeeze(mean(si,1)); % The euclidean mean for current si's.
-    curr_mean = real(euc_mean);
+    euc_mean  = real(squeeze(mean(si,1))); % The euclidean mean for current si's.
+%     curr_mean = real(euc_mean);
+    curr_mean = inv_tang_map(euc_mean, curr_mean);
 end
 
 Riem_mean = curr_mean;

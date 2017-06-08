@@ -7,8 +7,7 @@ clc;
 %% adding the path to the data and to the functions
 prompt={'Enter the place you want to take the cov mats from:',...
     'Enter the place you want to take the typicial matrices from:',...
-    'Enter the place you want to place the distance in files:',...
-    'Enter code folder:'};
+    'Enter the place you want to place the distance in files:'};
 dir_title  = 'Directories';
 directories      = inputdlg(prompt,dir_title);
 
@@ -18,9 +17,7 @@ directories      = inputdlg(prompt,dir_title);
 source_direct      = directories{1};
 typic_direct       = directories{2};
 dest_direct        = directories{3};
-code_direct        = genpath(directories{4});
-                            % adds all subfolders of code to path.
-addpath(code_direct)
+
 cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 %% Cleaning the data and downsampling it
@@ -61,18 +58,18 @@ for ii=1:N
     end    
 end
 %%  Now we can map them out:
-if K == 2
-    figure(1); scatter(distances(1,:), distances(2,:));
-    title('scatter according to distance from given means');
-    xlabel('distance from mean1'); ylabel('distance from mean2');
-elseif K > 2
-    figure(1); scatter3(distances(1,:), distances(2,:), distances(3,:));
-    title('scatter according to distance from given means');
-    xlabel('distance from mean1'); ylabel('distance from mean2'); 
-    zlabel('distance from mean3');
-end
+% if K == 2
+%     figure(1); scatter(distances(1,:), distances(2,:));
+%     title('scatter according to distance from given means');
+%     xlabel('distance from mean1'); ylabel('distance from mean2');
+% elseif K > 2
+%     figure(1); scatter3(distances(1,:), distances(2,:), distances(3,:));
+%     title('scatter according to distance from given means');
+%     xlabel('distance from mean1'); ylabel('distance from mean2'); 
+%     zlabel('distance from mean3');
+% end
 
-
+beep; pause(0.5); beep;
 
 
 

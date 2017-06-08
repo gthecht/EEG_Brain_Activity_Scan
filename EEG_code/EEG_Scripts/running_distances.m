@@ -23,7 +23,7 @@ for ii = 1:N
         tmp_dist_mat = load(allnames{ii});
         field     = fieldnames(tmp_dist_mat);
         dist_mat   = getfield(tmp_dist_mat, field{1});
-        scatter3(dist_mat(1),dist_mat(2),dist_mat(3),50,0);
+        scatter3(dist_mat(1),dist_mat(2),dist_mat(3),50,1);
         hold on;
     end
 end
