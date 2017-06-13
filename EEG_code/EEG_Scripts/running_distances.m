@@ -1,7 +1,7 @@
 %% Showing the distances together
 
 % typical branch on Gilad's disk_on_key:
-% D:\Project\EEG_Data\Data_with_median_clean_new\C04\2\distances
+% D:\Project\EEG_Data\Edited_Data\C04\1\distances
 %% adding the path to the data and to the functions
 prompt={'Enter the distances folder of first'...
         'Enter the distances folder of second'...
@@ -19,7 +19,7 @@ cellfun(@(x) addpath(x), directories);
 [ label2, index2 ] = find_typical( direct_2 );
 [ label3, index3 ] = find_typical( direct_3 );
 %%
-figure(1);
+figure();
 cd(direct_1);
 allfiles = dir(direct_1);
 allnames = {allfiles.name}.';

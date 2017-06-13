@@ -24,24 +24,10 @@ cov_mats = cov_mats(find(good_str));      % All the covs of the trials are in th
 N      = length(cov_mats);
 %% Now we calculate the Riemannian mean iteratively
 [rows, cols] = size(cov_mats{1});
-cov_3Dmat = zeros(N,rows, cols);
+cov_3Dmat = zeros(rows, cols,N);
 for ii = 1: N
-    cov_3Dmat(ii, :, :) =  cov_mats{ii};
+    cov_3Dmat(:, :, ii) =  cov_mats{ii};
 end
-% curr_mean = squeeze(mean(cov_3Dmat,1));
-curr_mean = squeeze(cov_3Dmat(1,:,:));
-si = zeros(N,rows, cols);
-% Now for the iterative loop:
-for kk = 1:iter
-    for ii = 1:N
-        si(ii,:,:) = tangent_map(squeeze(cov_3Dmat(ii,:,:)),curr_mean); 
-                        % the point on the tangent that fits the i'th trial
-    end
-    euc_mean  = real(squeeze(mean(si,1))); % The euclidean mean for current si's.
-%     curr_mean = real(euc_mean);
-    curr_mean = inv_tang_map(euc_mean, curr_mean);
-end
-
-Riem_mean = curr_mean;
+Riem_mean = RiemannianMean(cov_3Dmat);
 end
 
