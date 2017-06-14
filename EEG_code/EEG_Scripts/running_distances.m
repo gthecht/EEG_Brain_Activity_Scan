@@ -66,7 +66,7 @@ for ii = 1:N
 end
 %%
 
-title('distances of points from typical covs');
+title(['Riemannian distances of points from typical covs']);
 xlabel(['distance from mean of: ', label1]);
 ylabel(['distance from mean of: ', label2]);
 zlabel(['distance from mean of: ', label3]);
