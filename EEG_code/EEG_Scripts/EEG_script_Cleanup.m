@@ -17,7 +17,6 @@ title  = 'Directories';
 directories      = inputdlg(prompt,title);
 
 %% Splitting directories
-
 source_direct      = directories{1};
 dest_direct     = directories{2};
                             % adds all subfolders of code to path.
@@ -27,10 +26,10 @@ cd(dest_direct);
 %% making directory tree:
 all_source_files = dir(source_direct);
 subj_names = {all_source_files.name}.';
-subj_names = contains(subj_names, ["C","S"]);
+subj_names = subj_names(contains(subj_names, ["C","S"]));
 make_dir_tree( dest_direct, subj_names );
 %% Cleaning the data and downsampling it
-
+Clean_Stims( source_direct, dest_direct, subj_names );
 
 
 

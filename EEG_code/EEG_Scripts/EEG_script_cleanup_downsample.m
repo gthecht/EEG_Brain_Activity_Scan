@@ -31,7 +31,7 @@ allfiles = dir(data_direct);
 allnames = {allfiles.name}.';
 N = length(allnames);
 time_begin = 0;          % beginning time
-stim_str = '_16';        % the stim we want to clean with "_" before him to prevent 1 to be 11.
+
 for ii=1:N
     good_str = ~isempty(strfind(allnames{ii},[stim_str, '_trial']));
     if good_str == 1
