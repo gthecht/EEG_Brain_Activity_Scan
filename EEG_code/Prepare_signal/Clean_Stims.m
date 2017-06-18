@@ -14,6 +14,8 @@ for ii = 1:N
         stim_src_str  = [source_direct, '\', subj_names{ii}, '\Stim_', num2str(jj)];
         stim_dest_str = [dest_direct, '\edited_EEG_data\', subj_names{ii}, '\Stim_', ...
                                                 num2str(jj), '\clean'];
+        
+        cd(stim_dest_str)
         % Cleaning the data and downsampling it
 
         allfiles = dir(stim_src_str);
@@ -29,17 +31,15 @@ for ii = 1:N
         good_str   = contains(allnames,'trial');
         for kk=1:N
             if good_str(kk) == 1
-                cd(stim_src_str)
-                tmp_trial = load(allnames{kk});
+                tmp_trial = load([stim_src_str,'\',allnames{kk}]);
                 str_split = strsplit(allnames{kk},'.');
                 if contains(str_split{1}, '_cutstim')   % for new data names
                     str_split = strsplit(allnames{kk},'_cutstim');
-                elseif contains(str_split{1}, '_ditrend')   % for new data names
-                    str_split = strsplit(allnames{kk},'_ditrend');
+                elseif contains(str_split{1}, '_detrend')   % for new data names
+                    str_split = strsplit(allnames{kk},'_detrend');
                 end
                 
                 new_name  = [str_split{1}, '_clean.mat'];
-                cd(stim_dest_str)
                 eeg_cleanup(tmp_trial, time_begin, 1, new_name );
             end
 
