@@ -24,9 +24,7 @@ cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 
 %% making directory tree:
-all_source_files = dir(source_direct);
-subj_names = {all_source_files.name}.';
-subj_names = subj_names(contains(subj_names, ["C","S"]));
+subj_names = find_subject_names( source_direct);
 make_dir_tree( dest_direct, subj_names );
 %% Cleaning the data and downsampling it
 Clean_Stims( source_direct, dest_direct, subj_names );
