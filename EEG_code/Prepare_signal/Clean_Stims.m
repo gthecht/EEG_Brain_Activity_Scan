@@ -34,7 +34,7 @@ for ii = 1:N
                 cd(stim_src_str)
                 tmp_trial   = load(allnames{kk});
                 % Convolute the data with the BPF:
-                tmp_trial.F = conv2(tmp_trial.F, BPF', 'same');
+                tmp_trial.F = conv2(tmp_trial.F, BPF, 'same');
                 str_split   = strsplit(allnames{kk},'.');
                 if contains(str_split{1}, '_cutstim')   % for new data names
                     str_split = strsplit(allnames{kk},'_cutstim');

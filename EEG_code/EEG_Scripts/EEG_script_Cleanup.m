@@ -24,6 +24,7 @@ cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 
 %% Making directory tree
+tic
 all_source_files = dir(source_direct);
 subj_names = {all_source_files.name}.';
 subj_names = subj_names(contains(subj_names, ["C","S"]));
@@ -33,12 +34,17 @@ Clean_Stims( source_direct, dest_direct, subj_names );
 %% Clearing out the bad electrodes
 num_of_electrodes = 68;
 eta = 5;
+window_len = 31;
 threshold = 100;
-[good_electrodes, bad_electrodes = Clear_Electrodes( dest_direct,...
-                        subj_names, num_of_electrodes, threshold, eta );
-
-
-
+percent = 0.01;
+[good_electrodes, bad_electrodes] = Clear_Electrodes( dest_direct,...
+                        subj_names, num_of_electrodes, threshold,...
+                        eta, percent );
+toc
+% for ii=1:20
+%     beep;
+%     pause(0.5);
+% end
 
 
 
