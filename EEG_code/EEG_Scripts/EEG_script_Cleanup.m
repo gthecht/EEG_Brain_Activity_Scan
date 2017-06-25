@@ -43,26 +43,17 @@ disp('Clearing out the bad electrodes...');
 tic
 [good_electrodes, bad_electrodes] = Clear_Electrodes( edited_EEG_data_dir,...
                         subj_names, num_of_electrodes, threshold,...
-                        eta, percent );
+                        eta, window_len, percent );
 toc
 % for ii=1:20
 %     beep;
 %     pause(0.5);
 % end
-
-disp('calculating cov matrices...');
+%% cov matrices:
+disp('Calculating cov matrices...');
 tic
 
 calculate_covs( edited_EEG_data_dir)
 
 toc
-
-
-
-
-
-
-
-
-
 

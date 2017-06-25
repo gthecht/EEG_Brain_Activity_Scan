@@ -1,5 +1,5 @@
 function [ good_electrodes, bad_electrodes ] = Clear_Electrodes( direct,... 
-                            subj_names, electrodes_num, threshold, eta, percent )
+         subj_names, electrodes_num, threshold, eta, window_len, percent )
 % This function will take the clean data we managed to save earlier and
 % then find out whether there are bad electrodes in the data. If there are
 % ones who are bad' it will be removed from all data. Finally we will save
@@ -17,7 +17,7 @@ good_electrodes = 1:electrodes_num; % finding the good electrodes by
 % First loop for pulling out the good electrodes of each trial
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\edited_EEG_data\', subj_names{ii},...
+        stim_src_str  = [direct, '\', subj_names{ii},...
                                         '\Stim_', num2str(jj), '\clean'];
         allfiles = dir(stim_src_str);
         allnames = {allfiles.name}.';
@@ -32,7 +32,7 @@ for ii = 1:N
                 field      = fieldnames(tmp_trial);
                 tmp_trial  = getfield(tmp_trial, field{1});
                 tmp_good_elec   = Classify_Electrodes(tmp_trial,...
-                                                threshold, eta, percent);
+                                                threshold, eta, window_len, percent);
                 good_electrodes = intersect(good_electrodes, tmp_good_elec);
             end
         end
@@ -43,9 +43,9 @@ bad_electrodes = setdiff(1:electrodes_num, good_electrodes);
 % second loop for saving the data of the good electrodes only
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\edited_EEG_data\', subj_names{ii},...
+        stim_src_str  = [direct, '\', subj_names{ii},...
                                         '\Stim_', num2str(jj), '\clean'];
-        stim_dest_str = [direct, '\edited_EEG_data\', subj_names{ii},...
+        stim_dest_str = [direct, '\', subj_names{ii},...
                                         '\Stim_', num2str(jj), '\good_data'];
         
         allfiles = dir(stim_src_str);
@@ -59,10 +59,10 @@ for ii = 1:N
                 tmp_trial = load(allnames{kk});
                 str_split = strsplit(allnames{kk},'_clean');
                 new_name  = [str_split{1},'_good_data.mat'];
-                cd(stim_dest_str)
                 field      = fieldnames(tmp_trial);
                 tmp_trial  = getfield(tmp_trial, field{1});
-                good_data = tmp_trial(good_elec, :);
+                good_data = tmp_trial(good_electrodes, :);
+                cd(stim_dest_str);
                 save(new_name, 'good_data');
             end
         end
