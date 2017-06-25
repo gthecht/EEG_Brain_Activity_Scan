@@ -24,9 +24,7 @@ cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 
 %% Making directory tree
-all_source_files = dir(source_direct);
-subj_names = {all_source_files.name}.';
-subj_names = subj_names(contains(subj_names, ["C","S"]));
+subj_names = find_subj_names( source_direct );
 make_dir_tree( dest_direct, subj_names );
 edited_EEG_data_dir = [dest_direct, '\edited_EEG_data'];
 %% Cleaning the data and downsampling it
