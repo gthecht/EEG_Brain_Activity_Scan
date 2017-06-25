@@ -11,7 +11,7 @@ clear;
 clc;
 
 %% get directories:
-prompt={'Enter the subject''s original directory',...
+prompt={'Enter the original data directory',...
         'Enter edited data destination:'};
 title  = 'Directories';
 directories      = inputdlg(prompt,title);
@@ -19,34 +19,31 @@ directories      = inputdlg(prompt,title);
 %% Splitting directories
 source_direct = directories{1};
 dest_direct   = directories{2};
-                            % adds all subfolders of code to path.
 cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 
-%% Stims are:
+%% Initializing directories and stims:
+% Stims are:
 stims_vec = [1 2 3 11 12 13 14 15 16];
-edited_EEG_data = [dest_direct, '\edited_EEG_data'];
-%% Making directory tree
-subj_names = find_subj_names( source_direct );
+% Making directory tree
+subj_names = find_subject_names( source_direct );
 make_dir_tree( dest_direct, subj_names, stims_vec );
+% edited_EEG_data path:
+edited_EEG_data = [dest_direct, '\edited_EEG_data'];
 
 %% Cleaning the data and downsampling it
-disp('Cleaning and downsampling data...');
-Clean_Stims( source_direct, dest_direct, subj_names, stims_vec );
+disp('    --Cleaning and downsampling data...');
+Clean_Stims( source_direct, edited_EEG_data, subj_names, stims_vec );
 
 %% Clearing out the bad electrodes
-
-disp('Clearing out the bad electrodes...');
+disp('    --Clearing out the bad electrodes...');
 tic
-[good_electrodes, bad_electrodes] =...
- Clear_Electrodes( edited_EEG_data, subj_names, stims_vec );
+Clear_Electrodes( edited_EEG_data, subj_names, stims_vec );
 toc
 
 %% cov matrices:
-disp('Calculating cov matrices...');
+disp('    --Calculating cov matrices...');
 tic
-
 calculate_covs( edited_EEG_data, stims_vec)
-
 toc
 

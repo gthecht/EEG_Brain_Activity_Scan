@@ -1,5 +1,4 @@
-function [ good_electrodes, bad_electrodes ] =...
-                         Clear_Electrodes( direct, subj_names, stims_vec )
+function [] = Clear_Electrodes( direct, subj_names, stims_vec )
 % This function will take the clean data we managed to save earlier and
 % then find out whether there are bad electrodes in the data. If there are
 % ones who are bad' it will be removed from all data. Finally we will save
@@ -75,5 +74,9 @@ for ii = 1:N
     end
 end
 
-end
 
+mkdir(direct, 'good_elecs');
+cd([direct,'\good_elecs']);
+save('good_electrodes','good_electrodes');
+save('bad_electrodes','bad_electrodes');
+end
