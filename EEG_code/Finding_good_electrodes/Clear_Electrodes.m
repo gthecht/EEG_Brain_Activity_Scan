@@ -17,8 +17,8 @@ good_electrodes = 1:electrodes_num; % finding the good electrodes by
 % First loop for pulling out the good electrodes of each trial
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\', subj_names{ii}, '\Stim_',...
-                                                num2str(jj), '\clean'];
+        stim_src_str  = [direct, '\edited_EEG_data\', subj_names{ii},...
+                                        '\Stim_', num2str(jj), '\clean'];
         allfiles = dir(stim_src_str);
         allnames = {allfiles.name}.';
         M = length(allnames);
@@ -43,8 +43,8 @@ bad_electrodes = setdiff(1:electrodes_num, good_electrodes);
 % second loop for saving the data of the good electrodes only
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\', subj_names{ii}, '\Stim_',...
-                                                num2str(jj), '\clean'];
+        stim_src_str  = [direct, '\edited_EEG_data\', subj_names{ii},...
+                                        '\Stim_', num2str(jj), '\clean'];
         stim_dest_str = [direct, '\edited_EEG_data\', subj_names{ii},...
                                         '\Stim_', num2str(jj), '\good_data'];
         
@@ -52,7 +52,7 @@ for ii = 1:N
         allnames = {allfiles.name}.';
         M = length(allnames);
         
-        good_str   = contains(allnames,'trial');
+        good_str   = contains(allnames,'clean');
         for kk=1:M
             if good_str(kk) == 1
                 cd(stim_src_str)
