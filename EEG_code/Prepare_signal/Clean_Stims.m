@@ -1,4 +1,4 @@
-function [ output_args ] = Clean_Stims( source_direct, dest_direct, subj_names )
+function [ output_args ] = Clean_Stims( source_direct, dest_direct, subj_names, stims_vec )
 % Recieves the Source and destination cirectories, and the subject names,
 % and cleans out the data, saving it in the appropriate direc. in the
 % destination. Also downsamples and cuts in special manner for
@@ -6,7 +6,6 @@ function [ output_args ] = Clean_Stims( source_direct, dest_direct, subj_names )
 
 %% Regular cleanup:
 N         = length(subj_names);
-stims_vec = [1 2 3 11 12 13 14 15 16];
 stim_src_str  = [];
 stim_dest_str = [];
 % Loading the band pass filter:

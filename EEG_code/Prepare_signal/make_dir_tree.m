@@ -1,10 +1,10 @@
-function make_dir_tree( root_dir, subjects )
+function make_dir_tree( root_dir, subjects, stims_vec)
 % makes directory tree, for all the subjects within the root directory
 cd(root_dir);
 mkdir('edited_EEG_data');
 cd('edited_EEG_data');
 N         = length(subjects);
-stims_vec = [1 2 3 11 12 13 14 15 16];
+
 name_str  = [];
 for ii = 1:N
     name_str = subjects{ii};

@@ -1,12 +1,18 @@
-function [ good_electrodes, bad_electrodes ] = Clear_Electrodes( direct,... 
-         subj_names, electrodes_num, threshold, eta, window_len, percent )
+function [ good_electrodes, bad_electrodes ] =...
+                         Clear_Electrodes( direct, subj_names, stims_vec )
 % This function will take the clean data we managed to save earlier and
 % then find out whether there are bad electrodes in the data. If there are
 % ones who are bad' it will be removed from all data. Finally we will save
 % the clear data in a folder called 'good_data'.
+%% several constants:
+num_of_electrodes = 68;
+eta = 5;
+window_len = 31;
+threshold = 100;
+percent = 0.01;
 
+%% Initializing variables:
 N         = length(subj_names);
-stims_vec = [1 2 3 11 12 13 14 15 16];
 stim_src_str  = [];
 stim_dest_str = [];
 trials_electrodes = [];             % in this matrix we'll save the good 
