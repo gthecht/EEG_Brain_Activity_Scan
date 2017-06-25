@@ -24,12 +24,14 @@ cellfun(@(x) addpath(x), directories);
 cd(dest_direct);
 
 %% Making directory tree
-tic
 all_source_files = dir(source_direct);
 subj_names = {all_source_files.name}.';
 subj_names = subj_names(contains(subj_names, ["C","S"]));
 make_dir_tree( dest_direct, subj_names );
+edited_EEG_data_dir = [dest_direct, '\edited_EEG_data'];
 %% Cleaning the data and downsampling it
+disp('Cleaning and downsampling data...');
+
 Clean_Stims( source_direct, dest_direct, subj_names );
 %% Clearing out the bad electrodes
 num_of_electrodes = 68;
@@ -37,7 +39,9 @@ eta = 5;
 window_len = 31;
 threshold = 100;
 percent = 0.01;
-[good_electrodes, bad_electrodes] = Clear_Electrodes( dest_direct,...
+disp('Clearing out the bad electrodes...');
+tic
+[good_electrodes, bad_electrodes] = Clear_Electrodes( edited_EEG_data_dir,...
                         subj_names, num_of_electrodes, threshold,...
                         eta, percent );
 toc
@@ -46,9 +50,12 @@ toc
 %     pause(0.5);
 % end
 
+disp('calculating cov matrices...');
+tic
 
+calculate_covs( edited_EEG_data_dir)
 
-
+toc
 
 
 
