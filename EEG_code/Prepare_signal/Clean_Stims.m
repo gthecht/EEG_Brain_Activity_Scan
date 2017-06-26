@@ -13,7 +13,7 @@ load('BPF.mat');
 for ii = 1:N
     for jj = stims_vec
         stim_src_str  = [source_direct, '\', subj_names{ii}, '\Stim_', num2str(jj)];
-        stim_dest_str = [edited_EEG_data, subj_names{ii}, '\Stim_', ...
+        stim_dest_str = [edited_EEG_data, '\', subj_names{ii}, '\Stim_', ...
                                                 num2str(jj), '\clean'];
         % Cleaning the data and downsampling it
 
