@@ -4,7 +4,7 @@ function [] = Clear_Electrodes( direct, subj_names, stims_vec )
 % ones who are bad' it will be removed from all data. Finally we will save
 % the clear data in a folder called 'good_data'.
 %% several constants:
-num_of_electrodes = 68;
+electrodes_num = 68;
 eta = 5;
 window_len = 31;
 threshold = 100;
