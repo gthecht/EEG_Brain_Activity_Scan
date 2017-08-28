@@ -5,7 +5,7 @@ clear;
 clc;
 %% entering the 'edited_EEG_data' directory
 
-% example in Gilad's:   D:\Project\EEG_Data\Edited_Data\C04\1\cov
+% example in Gilad's:   E:\Gilad\Psagot\Technion\Semester6\Project1\EEG_data_files\EEG_data_edited\edited_EEG_data
 % example in Ronen's:   C:\Users\Ronen\Documents\BrainStorm\brainstormdb\EEG_data\Edited_Data\C04\16\cov
 % example save Ronen's: C:\Users\Ronen\Documents\BrainStorm\brainstormdb\EEG_data\Edited_Data\cov_mats_in_rows
 
@@ -29,18 +29,20 @@ pick_stims = listdlg('PromptString', 'Select stimulations;', 'SelectionMode',...
 %% Adding trials from chosen subjects and stims into cells
 data_cell   = cell(length(pick_stims), length(pick_subj));   % cell that will hold all cov mats of every stim and subject
 legend_cell = data_cell;    % holds the names of the stims and subjs
-legend_str  = zeros(length(pick_subj) * length(pick_stims), 1);
+legend_str  = zeros(length(pick_subj) * length(pick_stims), 1);     % the legend size - will plug in subject and stim later
+label       = zeros(length(pick_subj) * length(pick_stims), 1);      % the label for the SVM - sick = 1, healthy = 0
 for ind_subj = 1:length(pick_subj)
     for ind_stim = 1:length(pick_stims)
+        label((ind_subj-1) * length(pick_stims) + ind_stim) = contains(subjs{pick_subj(ind_subj)}, "S");
         temp_dir    = [src_dir, '\', subjs{pick_subj(ind_subj)}, '\',...
                                           stims{pick_stims(ind_stim)}, '\cov'];
-        cd(temp_dir);
+        cd(temp_dir);   % moving to cov directory for current subject and stimulation
         temp_files  = dir(temp_dir);
         temp_names  = {temp_files.name}.';
-        temp_trials = temp_names(contains(temp_names, 'trial'));
+        temp_trials = temp_names(contains(temp_names, 'trial')); % all trials
         load_struct = cellfun(@(X) load(X, 'tmp_row_cov'), temp_trials);
-        data_cell{ind_stim,ind_subj}   = struct2cell(load_struct).';
-        legend_cell{ind_stim,ind_subj} = [subjs{pick_subj(ind_subj)}, ' - ', stims{pick_stims(ind_stim)}];
+        data_cell{ind_stim,ind_subj}   = struct2cell(load_struct).';    % loading into cell
+        legend_cell{ind_stim,ind_subj} = [subjs{pick_subj(ind_subj)}, ' - ', stims{pick_stims(ind_stim)}];  % updating legend
 %         legend_str(ind_subj*ind_stim, 1) = [subjs{pick_subj(ind_subj)}, ' - ', stims{pick_stims(ind_stim)}];
     end
 end
@@ -50,7 +52,7 @@ end
 [cov_mat, dat_lengths] = cov2vec( data_cell, []);
                                 % the matrix of cov-vectors
 %% Now we'll run a diffusion map
-[ eigvec, color ] = Diff_map( cov_mat, dat_lengths, legend_cell);
+[ eigvec, color ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 
 %% saving the data
 % name = ['Stim_',labels{1}(12:end-2),'_',labels{2}(12:end-2),'_',labels{3}(12:end-2),'_Sbj_',labels{1}(4:6),'_',labels{2}(4:6),'_',labels{3}(4:6)];
