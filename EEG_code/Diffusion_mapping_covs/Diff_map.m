@@ -1,4 +1,4 @@
-function [ eigvec, color ] = Diff_map( vecs_in_cols, dat_lengths, legend_cell, label )
+function [ mV, map_handle ] = Diff_map( vecs_in_cols, dat_lengths, legend_cell, label )
 % Runs diffusion maps on the input which is the data vector, in columns as
 % a mtrix.
 % dat_lengths is a vector containing the number of trials per experiment
@@ -10,9 +10,10 @@ mK           = exp(-(norm_squared.^2)/(2*eps^2));
 
 % Calculating the diagonal matrix D
 mD = diag( sum(mK, 2) );
+sparse_mD = sparse(mD);     % Here's where I changed!!
 
 % Calculating A, it's eigenvalues and eigenvectors for the diffusion
-mA            = mD \ mK;
+mA            = sparse_mD \ mK;     % and here I changed as well!
 [mV , mE]     = eig(mA);
 eigvec        = mV(:,2:4);
 
@@ -20,11 +21,11 @@ eigvec        = mV(:,2:4);
 color = [];
 beep;
 use_label = questdlg(['Color for SVM?']);   %decide whether to use label coloring, or color each part differently
-figure(); hold on;
-if use_label == 'Yes'
+map_handle = figure(); hold on;
+if strcmp(use_label,'Yes')
     for ii = 1: length(dat_lengths(:))
-    indices = (sum(dat_lengths(1:ii-1))+1):sum(dat_lengths(1:ii));
-    scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, label(ii) * ones(1,dat_lengths(ii)), 'Fill');
+        indices = (sum(dat_lengths(1:ii-1))+1):sum(dat_lengths(1:ii));
+        scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, label(ii) * ones(1,dat_lengths(ii)), 'Fill');
     end
 else
     for ii = 1: length(dat_lengths(:))

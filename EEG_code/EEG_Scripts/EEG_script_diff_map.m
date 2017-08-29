@@ -10,7 +10,7 @@ clc;
 % example save Ronen's: C:\Users\Ronen\Documents\BrainStorm\brainstormdb\EEG_data\Edited_Data\cov_mats_in_rows
 
 prompt={'Enter data directory'};
-dir_title  = 'Directories';
+dir_title  = 'data';
 src_cell   = inputdlg(prompt,dir_title);
 src_dir    = src_cell{1};
 cd(src_dir);
@@ -25,6 +25,7 @@ subj_names = subjs(pick_subj);
 stims      = find_stims( src_dir, subj_names );
 pick_stims = listdlg('PromptString', 'Select stimulations;', 'SelectionMode',...
     'multiple', 'ListString', stims);
+stim_names = stims(pick_stims);
 
 %% Adding trials from chosen subjects and stims into cells
 data_cell   = cell(length(pick_stims), length(pick_subj));   % cell that will hold all cov mats of every stim and subject
@@ -33,7 +34,10 @@ legend_str  = zeros(length(pick_subj) * length(pick_stims), 1);     % the legend
 label       = zeros(length(pick_subj) * length(pick_stims), 1);      % the label for the SVM - sick = 1, healthy = 0
 for ind_subj = 1:length(pick_subj)
     for ind_stim = 1:length(pick_stims)
+        % Gives a label of sick/not sick (1=sick):
         label((ind_subj-1) * length(pick_stims) + ind_stim) = contains(subjs{pick_subj(ind_subj)}, "S");
+        
+        % finding cov directory of temporary subject-stim:
         temp_dir    = [src_dir, '\', subjs{pick_subj(ind_subj)}, '\',...
                                           stims{pick_stims(ind_stim)}, '\cov'];
         cd(temp_dir);   % moving to cov directory for current subject and stimulation
@@ -48,13 +52,28 @@ for ind_subj = 1:length(pick_subj)
 end
 
 
-%% changeing covs to matrices around common mean
+%% changing covs to matrices around common mean
 [cov_mat, dat_lengths] = cov2vec( data_cell, []);
                                 % the matrix of cov-vectors
+
+label_vec = [];
+for ii = 1: length(dat_lengths(:))
+    label_vec = [label_vec; label(ii) * ones(dat_lengths(ii),1)];
+end
 %% Now we'll run a diffusion map
-[ eigvec, color ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
+[ diffusion_matrix, map_handle ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 
 %% saving the data
+data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
+    'diffusion_matrix', diffusion_matrix, 'labels', label_vec);
+
+prompt={'Enter save destination directory:', 'Choose filename:'};
+dir_title  = 'save';
+dest_cell   = inputdlg(prompt,dir_title);
+dest_dir    = dest_cell{1};
+filename    = [dest_cell{2},'.mat'];
+cd(dest_dir);
+save(filename, 'data_struct');
 % name = ['Stim_',labels{1}(12:end-2),'_',labels{2}(12:end-2),'_',labels{3}(12:end-2),'_Sbj_',labels{1}(4:6),'_',labels{2}(4:6),'_',labels{3}(4:6)];
 % save([name,'_cov_mat'], 'cov_mat');
 % save([name,'_eigvec'], 'eigvec');
