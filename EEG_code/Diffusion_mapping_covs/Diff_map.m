@@ -20,9 +20,9 @@ eigvec        = mV(:,2:4);
 %% Plotting/Scattering the map after diffusion
 color = [];
 beep;
-use_label = questdlg(['Color for SVM?']);   %decide whether to use label coloring, or color each part differently
+use_label = questdlg('pick color', 'color scheme', 'SVM', 'per group', 'cancel', 'per group');   %decide whether to use label coloring, or color each part differently
 map_handle = figure(); hold on;
-if strcmp(use_label,'Yes')
+if strcmp(use_label,'SVM')
     for ii = 1: length(dat_lengths(:))
         indices = (sum(dat_lengths(1:ii-1))+1):sum(dat_lengths(1:ii));
         scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, label(ii) * ones(1,dat_lengths(ii)), 'Fill');
