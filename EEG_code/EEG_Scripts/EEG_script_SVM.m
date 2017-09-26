@@ -27,10 +27,10 @@ k    = floor(0.9 * n);
 perm = randperm(n).';
 perm_feats  = feature_mat(perm(1:k),:);
 perm_labels = label_vec(perm(1:k));
-linear_svm  = fitcsvm(perm_feats, perm_labels);
+linear_svm  = fitclinear(perm_feats, perm_labels);
 %% testing and checking outcome
-Xval_svm      = crossval(linear_svm);
-[test_label, tet_score] = predict(linear_svm, feature_mat(perm(k+1: end),:));
+% Xval_svm      = crossval(linear_svm);
+[test_label, test_score] = predict(linear_svm, feature_mat(perm(k+1: end),:));
 success_ratio = sum(test_label == label_vec(perm(k+1: end))) / (n-k);
 
 
