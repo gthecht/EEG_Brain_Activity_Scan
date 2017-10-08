@@ -47,4 +47,5 @@ tic
 calculate_covs( edited_EEG_data, stims_vec)
 toc
 
-disp('    --done!!');
+disp('    --Done!!');
+
