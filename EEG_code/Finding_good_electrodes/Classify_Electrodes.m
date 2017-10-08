@@ -1,11 +1,11 @@
 function [ tmp_good_elec ] = Classify_Electrodes( stim_src_str, threshold,...
-                                                    eta, window_len,...
-                                                    percent_trial, percent_stim )
+                                                  eta, window_len,electrodes_num,...
+                                                  percent_trial, percent_stim )
 % This function checks what are the good electrodes for each stim when
 % based on checking each trial.
 
 counter = 0;            % counts the number of trials in the specific stim.
-bad_electrodes = [];
+bad_electrodes = zeros(electrodes_num, 1);
 allfiles = dir(stim_src_str);
 allnames = {allfiles.name}.';
 M = length(allnames);
@@ -20,11 +20,12 @@ for kk=1:M
         field      = fieldnames(tmp_trial);
         tmp_trial  = getfield(tmp_trial, field{1});
         
+        % Threshold condition
         [electrodes_num, trial_len] = size(tmp_trial); 
         out_of_bound = (abs(tmp_trial) > threshold);
         tmp_bad_electrodes = sum(out_of_bound, 2);
 
-
+        % Window filtering condition
         ones_window = ones(1,window_len);
         local_std_filted = stdfilt(tmp_trial,ones_window);
         local_mean_filted = imfilter(tmp_trial, ones_window) / window_len;
@@ -32,19 +33,19 @@ for kk=1:M
         local_bad_elec = local_data_corr > eta;
         tmp_bad_electrodes = tmp_bad_electrodes + sum(local_bad_elec, 2);
 
-
+        % All signal condition
         std_all = std(tmp_trial,0,1);
         mean_all = mean(tmp_trial,1);
         data_corr_all  = (tmp_trial - repmat(mean_all,electrodes_num,1)) ./ repmat(std_all,electrodes_num,1);
         total_bad_elec = data_corr_all > eta;
         tmp_bad_electrodes = tmp_bad_electrodes + sum(total_bad_elec, 2);
-
+        
+        % Searching for the bad electrodes
         bad_electrodes = bad_electrodes + (tmp_bad_electrodes >= floor(percent_trial * trial_len));
-
-
     end
 end
 
+% Finding the good electrodes
 tmp_good_elec = find(bad_electrodes <= floor(percent_stim * counter));
 
 end

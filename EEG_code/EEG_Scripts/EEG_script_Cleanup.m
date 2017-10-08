@@ -25,6 +25,7 @@ cd(dest_direct);
 %% Initializing directories and stims:
 % Stims are:
 stims_vec = [1 2 3 11 12 13 14 15 16];
+% stims_vec = [1 2];      %FOR EXAMPLE
 % Making directory tree
 subj_names = find_subject_names( source_direct );
 make_dir_tree( dest_direct, subj_names, stims_vec );
@@ -33,7 +34,9 @@ edited_EEG_data = [dest_direct, '\edited_EEG_data'];
 
 %% Cleaning the data and downsampling it
 disp('    --Cleaning and downsampling data...');
+tic
 Clean_Stims( source_direct, edited_EEG_data, subj_names, stims_vec );
+toc
 
 %% Clearing out the bad electrodes
 disp('    --Clearing out the bad electrodes...');
