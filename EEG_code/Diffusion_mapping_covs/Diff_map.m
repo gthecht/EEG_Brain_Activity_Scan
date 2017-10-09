@@ -1,8 +1,9 @@
 function [ mV, map_handle ] = Diff_map( vecs_in_cols, dat_lengths, legend_cell, label )
 % Runs diffusion maps on the input which is the data vector, in columns as
-% a mtrix.
+% a mtrix
 % dat_lengths is a vector containing the number of trials per experiment
 
+[lRow, lCol]    = size(vecs_in_cols);
 % Calculating the Kernel for each dimension in the images
 norm_squared = squareform(pdist(vecs_in_cols'));
 eps          = median(norm_squared(:));

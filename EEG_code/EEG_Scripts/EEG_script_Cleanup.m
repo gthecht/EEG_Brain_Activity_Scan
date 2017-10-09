@@ -9,6 +9,7 @@
 
 clear;
 clc;
+c_begin = fix(clock)
 
 %% get directories:
 prompt={'Enter the original data directory',...
@@ -25,7 +26,6 @@ cd(dest_direct);
 %% Initializing directories and stims:
 % Stims are:
 stims_vec = [1 2 3 11 12 13 14 15 16];
-% stims_vec = [1 2];      %FOR EXAMPLE
 % Making directory tree
 subj_names = find_subject_names( source_direct );
 make_dir_tree( dest_direct, subj_names, stims_vec );
@@ -51,4 +51,5 @@ calculate_covs( edited_EEG_data, stims_vec)
 toc
 
 disp('    --Done!!');
+c_finish = fix(clock)
 
