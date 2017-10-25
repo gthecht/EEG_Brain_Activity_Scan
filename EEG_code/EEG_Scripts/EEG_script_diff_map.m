@@ -28,6 +28,7 @@ pick_stims = listdlg('PromptString', 'Select stimulations;', 'SelectionMode',...
 stim_names = stims(pick_stims);
 
 %% Adding trials from chosen subjects and stims into cells
+tic
 data_cell   = cell(length(pick_stims), length(pick_subj));   % cell that will hold all cov mats of every stim and subject
 legend_cell = data_cell;    % holds the names of the stims and subjs
 legend_str  = zeros(length(pick_subj) * length(pick_stims), 1);     % the legend size - will plug in subject and stim later
@@ -51,7 +52,8 @@ for ind_subj = 1:length(pick_subj)
     end
 end
 
-
+disp('    --finished loading all trials');
+toc
 %% changing covs to matrices around common mean
 [cov_mat, dat_lengths] = cov2vec( data_cell, []);
                                 % the matrix of cov-vectors
@@ -60,12 +62,16 @@ label_vec = [];
 for ii = 1: length(dat_lengths(:))
     label_vec = [label_vec; label(ii) * ones(dat_lengths(ii),1)];
 end
-%% Now we'll run a diffusion map
-[ diffusion_matrix, map_handle ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 
+disp('    --found Riemanien mean');
+toc
+%% Now we'll run a diffusion map
+[ diffusion_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
+disp('    --wrote down diffusion maps');
+toc
 %% saving the data
 data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
-    'diffusion_matrix', diffusion_matrix, 'labels', label_vec);
+    'diffusion_matrix', diffusion_matrix, 'labels', label_vec, 'type_labels', type_label);
 
 prompt={'Enter save destination directory:', 'Choose filename:'};
 dir_title  = 'save';

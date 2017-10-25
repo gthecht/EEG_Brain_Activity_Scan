@@ -9,7 +9,7 @@
 
 clear;
 clc;
-c_begin = fix(clock)
+c_begin = fix(clock);
 
 %% get directories:
 prompt={'Enter the original data directory',...
@@ -51,5 +51,5 @@ calculate_covs( edited_EEG_data, stims_vec)
 toc
 
 disp('    --Done!!');
-c_finish = fix(clock)
+c_finish = fix(clock);
 
