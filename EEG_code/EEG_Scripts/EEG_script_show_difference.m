@@ -21,11 +21,14 @@ figure()
 subplot(3,1,1);
 plot(pre_file.F');
 title(['Original EEG data of ',pre_file.Comment,' subject ', subj]);
+xlim([0, length(pre_file.Time)]);
 subplot(3,1,2);
 plot(proc_file.good_data');
 title(['Processed EEG data of ',pre_file.Comment,' subject ', subj]);
+xlim([0, size(proc_file.good_data,2)]);
 ylabel('Amplitude (mV)');
 subplot(3,1,3);
 plot(pre_file.F(bad_file.bad_electrodes,:)');
 title(['EEG bad electrodes data of ',pre_file.Comment,' subject ', subj]);
+xlim([0, length(pre_file.Time)]);
 xlabel('time (ms)');
