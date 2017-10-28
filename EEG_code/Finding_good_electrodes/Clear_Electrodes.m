@@ -11,6 +11,7 @@ window_len = 31;
 threshold = 100;
 percent_trial = 0.03;
 percent_stim = 0.05;
+bad_trial = 0.5;
 
 %% Initializing variables:
 N = length(subj_names);
@@ -38,7 +39,8 @@ for ii = 1:N
 %                 tmp_trial  = getfield(tmp_trial, field{1});
         tmp_good_elec = Classify_Electrodes(stim_src_str, threshold,...
                                               eta, window_len,electrodes_num,...
-                                              percent_trial, percent_stim);
+                                              percent_trial, percent_stim,...
+                                              bad_trial);
         good_electrodes = intersect(good_electrodes, tmp_good_elec);
 %             end
 %         end

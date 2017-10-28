@@ -1,6 +1,7 @@
 function [ tmp_good_elec ] = Classify_Electrodes( stim_src_str, threshold,...
                                                   eta, window_len,electrodes_num,...
-                                                  percent_trial, percent_stim )
+                                                  percent_trial, percent_stim,...
+                                                  bad_trial)
 % This function checks what are the good electrodes for each stim when
 % based on checking each trial.
 
@@ -9,6 +10,9 @@ bad_electrodes = zeros(electrodes_num, 1);
 allfiles = dir(stim_src_str);
 allnames = {allfiles.name}.';
 M = length(allnames);
+
+bad_trials = zeros(electrodes_num, M);
+trials_names = cell(M,1);
         
 good_str   = contains(allnames,'trial');
         
@@ -21,7 +25,7 @@ for kk=1:M
         tmp_trial  = getfield(tmp_trial, field{1});
         
         % Threshold condition
-        [electrodes_num, trial_len] = size(tmp_trial); 
+        [electrodes_num, trial_len] = size(tmp_trial);
         out_of_bound = (abs(tmp_trial) > threshold);
         tmp_bad_electrodes = sum(out_of_bound, 2);
 
@@ -40,6 +44,12 @@ for kk=1:M
         total_bad_elec = data_corr_all > eta;
         tmp_bad_electrodes = tmp_bad_electrodes + sum(total_bad_elec, 2);
         
+        % Very bad electrodes in a trial
+        bad_trials(:, counter) = (tmp_bad_electrodes >= floor(bad_trial * trial_len));
+        
+        % Saving aside the names of the trails
+        trials_names{counter} = allnames{kk};
+        
         % Searching for the bad electrodes
         bad_electrodes = bad_electrodes + (tmp_bad_electrodes >= floor(percent_trial * trial_len));
     end
@@ -47,6 +57,14 @@ end
 
 % Finding the good electrodes
 tmp_good_elec = find(bad_electrodes <= floor(percent_stim * counter));
+
+cd(stim_src_str)
+bad_trials = bad_trials(tmp_good_elec, (1:counter));
+trials_names = trials_names((1:counter),1);
+is_bad_trial = sum(bad_trials,1) > 0;   % Checking the trials which were 
+                                        % bad but didnt delete its bad
+                                        % electrodes
+delete(trials_names{is_bad_trial});
 
 end
 
