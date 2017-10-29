@@ -65,6 +65,9 @@ end
 
 disp('    --found Riemanien mean');
 toc
+
+%% Running PCA on the Riemannian vectors
+
 %% Now we'll run a diffusion map
 [ diffusion_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 disp('    --wrote down diffusion maps');

@@ -21,7 +21,7 @@ dim         = str2double(dim_cell{1});
 feature_mat = data_struct.diffusion_matrix(:,2:dim+1);
 label_vec   = data_struct.type_labels;
 % label_vec   = data_struct.labels;
-SVM_mat     = [feature_mat, label_vec];
+SVM_mat     = [feature_mat, label_vec'];
 %% building SVM model:
 n    = length(label_vec);
 k    = floor(0.9 * n);

@@ -20,8 +20,6 @@ eigvec        = mV(:,2:4);
 
 %% Plotting/Scattering the map after diffusion
 color = [];
-beep;
-% use_label = questdlg('pick color', 'color scheme', 'SVM', 'per group', 'cancel', 'per group');   %decide whether to use label coloring, or color each part differently
 figure(); hold on;
 % if strcmp(use_label,'SVM')
     for ii = 1: length(dat_lengths(:))
@@ -50,9 +48,6 @@ figure(); hold on;
     zlabel('\psi_4');
     legend(legend_cell(:), 'Interpreter', 'none');
     title('Diffusion map, colored per subject and stimulation')
-% end
-% diff_title = ['Diffusion maps of: ', labels{:}];
-% view(0,90);
 
 end
 
