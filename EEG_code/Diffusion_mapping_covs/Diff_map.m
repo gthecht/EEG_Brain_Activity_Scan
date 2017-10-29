@@ -19,12 +19,16 @@ mA            = sparse_mD \ mK;     % and here I changed as well!
 eigvec        = mV(:,2:4);
 
 %% Plotting/Scattering the map after diffusion
+% We'll create a marker-shape vector:
+mkr_shape = ['o','+','*','x','s','d','^','p','h'];
+stim_num  = size(legend_cell,1);
 color = [];
 figure(); hold on;
 % if strcmp(use_label,'SVM')
     for ii = 1: length(dat_lengths(:))
         indices = (sum(dat_lengths(1:ii-1))+1):sum(dat_lengths(1:ii));
-        scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, label(ii) * ones(1,dat_lengths(ii)), 'Fill');
+        scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, ...
+            label(ii) * ones(1,dat_lengths(ii)), 'Fill', mkr_shape(mod(ii,stim_num)));
     end
 %     colormap hsv;
     xlabel('\psi_2');
@@ -39,7 +43,8 @@ type_label = [];
 figure(); hold on;
     for ii = 1: length(dat_lengths(:))
         indices = (sum(dat_lengths(1:ii-1))+1):sum(dat_lengths(1:ii));
-        scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50, ii * ones(1,dat_lengths(ii)), 'Fill');
+        scatter3(mV(indices,2),mV(indices,3),mV(indices,4), 50,...
+            ii * ones(1,dat_lengths(ii)), 'Fill', mkr_shape(mod(ii,stim_num)));
         type_label = [type_label,ii * ones(1,dat_lengths(ii))];
     end
     colormap hsv;
