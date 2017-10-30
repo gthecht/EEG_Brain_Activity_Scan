@@ -70,7 +70,7 @@ toc
 [pca_vec, PCA_type_label] = PCA_map( cov_mat, dat_lengths, legend_cell, label);
 
 %% Running TSNE on the RIemannian vectors
-[RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
+% [RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
 %% Now we'll run a diffusion map
 [ diffusion_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 disp('    --wrote down diffusion maps');
