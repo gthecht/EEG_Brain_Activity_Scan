@@ -77,7 +77,8 @@ disp('    --wrote down diffusion maps');
 toc
 %% saving the data
 data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
-    'diffusion_matrix', diffusion_matrix, 'labels', label_vec, 'type_labels', type_label);
+    'diffusion_matrix', diffusion_matrix, 'PCA_matrix', pca_vec, 'labels',...
+    label_vec, 'type_labels', type_label);
 
 prompt={'Enter save destination directory:', 'Choose filename:'};
 dir_title  = 'save';

@@ -4,35 +4,40 @@ clear; clc;
 %% Loading Struct with data from diff_maps script.
 % struct look thus:
     % data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
-    %     'diffusion_matrix', diffusion_matrix, 'labels', label_vec);
+    %   'diffusion_matrix', diffusion_matrix, 'PCA_matrix', pca_vec, 'labels', label_vec, 'type_labels', type_label);
 
-% Ask for filename:
-prompt={'Enter filename (and path) for loading:'};
-dir_title  = 'load';
-filename_cell   = inputdlg(prompt,dir_title);
-filename    = filename_cell{1};
-load(filename);     % loading data_struct
-
+% Loading data:
+data_cell = load_SVMdata(); 
+% this cell contains structs, of different names, each containing the 
+% struct named 'data_struct'. This has the description above.
 %% Preparing for SVM:
+% Pick number of dimensions:
 prompt={'How many dimensions do you want? (enter number)'};
 dir_title   = 'SVM dimensions';
 dim_cell    = inputdlg(prompt, dir_title);
 dim         = str2double(dim_cell{1});
-feature_mat = data_struct.diffusion_matrix(:,2:dim+1);
-label_vec   = data_struct.type_labels;
-% label_vec   = data_struct.labels;
-SVM_mat     = [feature_mat, label_vec'];
+
+% Build feature matrix (with labels at the end - both the sick/healthy
+% label, and the type label:
+diff_features = data_struct.diffusion_matrix(:,2:dim+1);
+pca_features  = data_struct.pca_vec(:,1:dim);
+type_vec   = data_struct.type_labels;
+sick_vec   = data_struct.labels;
+diff_mat   = [diff_features, type_vec', sick_vec'];
+pca_mat    = [pca_features, type_vec', sick_vec'];
+% leave out sick and healthy subjects for testing
+
 %% building SVM model:
-n    = length(label_vec);
+n    = length(type_vec);
 k    = floor(0.9 * n);
 perm = randperm(n).';
-perm_feats  = feature_mat(perm(1:k),:);
-perm_labels = label_vec(perm(1:k));
+perm_feats  = diff_features(perm(1:k),:);
+perm_labels = type_vec(perm(1:k));
 linear_svm  = fitclinear(perm_feats, perm_labels);
 %% testing and checking outcome
 % Xval_svm      = crossval(linear_svm);
-[test_label, test_score] = predict(linear_svm, feature_mat(perm(k+1: end),:));
-success_ratio = sum(test_label == label_vec(perm(k+1: end))) / (n-k);
+[test_label, test_score] = predict(linear_svm, diff_features(perm(k+1: end),:));
+success_ratio = sum(test_label == type_vec(perm(k+1: end))) / (n-k);
 
 
 % NOTE
