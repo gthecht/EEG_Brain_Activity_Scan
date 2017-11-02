@@ -70,14 +70,15 @@ toc
 [pca_vec, PCA_type_label] = PCA_map( cov_mat, dat_lengths, legend_cell, label);
 
 %% Running TSNE on the RIemannian vectors
-[RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
+% [RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
 %% Now we'll run a diffusion map
 [ diffusion_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
 disp('    --wrote down diffusion maps');
 toc
 %% saving the data
 data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
-    'diffusion_matrix', diffusion_matrix, 'labels', label_vec, 'type_labels', type_label);
+    'diffusion_matrix', diffusion_matrix, 'PCA_matrix', pca_vec, 'labels',...
+    label_vec, 'type_labels', type_label);
 
 prompt={'Enter save destination directory:', 'Choose filename:'};
 dir_title  = 'save';
