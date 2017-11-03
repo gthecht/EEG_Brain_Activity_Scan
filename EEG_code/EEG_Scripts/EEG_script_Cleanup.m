@@ -4,7 +4,9 @@
 % ordered in the standard manner.
 % Downsampples to 1KHz and cuts from t=0 to end.
 % For the somatosensory takes from t=0.07sec.
-
+% Clearing the stims from bad electrodes and bad trials, and afterwards it
+% saves the relevant data from the good electrodes and calculate the
+% covariance matrix for each stimulation in each subject.
 % Organizes everything in edited_data directory.
 
 clear;
