@@ -10,6 +10,7 @@ clear; clc;
 data_cell = load_SVMdata(); 
 % this cell contains structs, of different names, each containing the 
 % struct named 'data_struct'. This has the description above.
+
 %% Preparing for SVM:
 % Pick number of dimensions:
 prompt={'How many dimensions do you want? (enter number)'};
@@ -26,6 +27,11 @@ sick_vec   = data_struct.labels;
 diff_mat   = [diff_features, type_vec', sick_vec'];
 pca_mat    = [pca_features, type_vec', sick_vec'];
 % leave out sick and healthy subjects for testing
+prompt={'number of sick to leave out:'; 'number of healthy to leave out:'};
+dir_title    = 'Leave out';
+leave_cell   = inputdlg(prompt, dir_title);
+sick_left    = str2double(leave_cell{1});
+healthy_left = str2double(leave_cell{2});
 
 %% building SVM model:
 n    = length(type_vec);
