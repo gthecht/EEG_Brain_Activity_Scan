@@ -1,5 +1,7 @@
 %% Gilad and Ronen - 28.08.17
 %  Using SVM to classify sick/healthy patients from diffusion maps
+% This is only good for seperating between sick and healthy, not between
+% stims. For that, use the classifier app.
 clear; clc;
 %% Loading Struct with data from diff_maps script.
 % struct look thus:
@@ -12,38 +14,45 @@ data_cell = load_SVMdata();
 % struct named 'data_struct'. This has the description above.
 
 %% Preparing for SVM:
-% Pick number of dimensions:
-prompt={'How many dimensions do you want? (enter number)'};
-dir_title   = 'SVM dimensions';
-dim_cell    = inputdlg(prompt, dir_title);
-dim         = str2double(dim_cell{1});
+[dim, leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...% use all dimensions, but remember to multiply by the eigenvalue
+                    choose_learning_aspects(data_cell{1}.data_struct);
+%% Beginning cells:
+n = size(leftout,1);
+test_diff_cell  = cell(n,1);
+train_diff_cell = cell(n,1);
+test_pca_cell   = cell(n,1);
+train_pca_cell  = cell(n,1);
+% and SVM models:
+SVM_diff_type  = cell(n,1);
+SVM_diff_sh    = cell(n,1);
+SVM_diff_test  = cell(n,1);
+confmat_diff   = cell(n,1);
+%% Running over all rows:
+for ii = 1:n
+    [test_diff_cell{ii}, train_diff_cell{ii}, test_pca_cell{ii}, train_pca_cell{ii}] = ...
+            prepareSVM( diff_mat, pca_mat, leftout(ii,:), type_vec, stim_num);
+    % building SVM models:
+    % model according to types - subject-stim, over diff_maps:
+    SVM_diff_type{ii}  = fitcecoc(train_diff_cell{ii}(:,1:end-2), train_diff_cell{ii}(:,end-1));
+    % model according to sick/healthy, over diff_maps:
+    SVM_diff_sh{ii}    = fitclinear(train_diff_cell{ii}(:,1:end-2), train_diff_cell{ii}(:,end));
 
-% Build feature matrix (with labels at the end - both the sick/healthy
-% label, and the type label:
-diff_features = data_struct.diffusion_matrix(:,2:dim+1);
-pca_features  = data_struct.pca_vec(:,1:dim);
-type_vec   = data_struct.type_labels;
-sick_vec   = data_struct.labels;
-diff_mat   = [diff_features, type_vec', sick_vec'];
-pca_mat    = [pca_features, type_vec', sick_vec'];
-% leave out sick and healthy subjects for testing
-prompt={'number of sick to leave out:'; 'number of healthy to leave out:'};
-dir_title    = 'Leave out';
-leave_cell   = inputdlg(prompt, dir_title);
-sick_left    = str2double(leave_cell{1});
-healthy_left = str2double(leave_cell{2});
+    % % model according to types - subject-stim, over pca_maps:
+    % SVM_pca_type  = fitcecoc(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end-1));
+    % % model according to sick/healthy, over pca_maps:
+    % SVM_pca_sh    = fitclinear(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end));
 
-%% building SVM model:
-n    = length(type_vec);
-k    = floor(0.9 * n);
-perm = randperm(n).';
-perm_feats  = diff_features(perm(1:k),:);
-perm_labels = type_vec(perm(1:k));
-linear_svm  = fitclinear(perm_feats, perm_labels);
-%% testing and checking outcome
-% Xval_svm      = crossval(linear_svm);
-[test_label, test_score] = predict(linear_svm, diff_features(perm(k+1: end),:));
-success_ratio = sum(test_label == type_vec(perm(k+1: end))) / (n-k);
+    % testing and checking outcome:
+    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii}(:,1:dim));
+    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii}(:,dim + 2));
+end
+%% To do next:
+% use the app to export training models
+% show the decision space - to see why its not good - By coloring the
+% space.
+% Don't use only linear SVM
+% Maybe look on leave one subject out
+
 
 
 % NOTE

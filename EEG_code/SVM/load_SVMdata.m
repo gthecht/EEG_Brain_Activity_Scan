@@ -14,11 +14,11 @@ file_names = {all_files.name}.';
 % opening list dialogue for picking files:
 pick_files  = listdlg('PromptString', 'Select subjects;', 'SelectionMode',...
     'multiple', 'ListString', file_names);
-picked_files = subjs(pick_files);
+picked_files = file_names(pick_files);
 % Loading:
 data_cell = cell(length(picked_files),1);
 for ii = 1 : length(picked_files)
-    data_cell(ii) = load(picked_files);     % loading data_struct
+    data_cell{ii} = load(picked_files{ii});     % loading data_struct
 end
 
 % returns data_cell
