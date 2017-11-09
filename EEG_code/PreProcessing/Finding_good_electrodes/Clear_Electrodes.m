@@ -1,7 +1,7 @@
 function [] = Clear_Electrodes( direct, subj_names, stims_vec )
 % This function will take the clean data we managed to save earlier and
 % then find out whether there are bad electrodes in the data. If there are
-% ones who are bad' it will be removed from all data. Finally we will save
+% ones who are bad, it will be removed from all data. Finally we will save
 % the clear data in a folder called 'good_data'.
 
 %% several constants:
@@ -11,7 +11,7 @@ window_len = 31;
 threshold = 100;
 percent_trial = 0.03;
 percent_stim = 0.05;
-bad_trial = 0.5;
+bad_trial = 0.3;
 
 %% Initializing variables:
 N = length(subj_names);
@@ -26,36 +26,24 @@ for ii = 1:N
     for jj = stims_vec
         stim_src_str  = [direct, '\', subj_names{ii},...
                                         '\Stim_', num2str(jj), '\clean'];
-%         allfiles = dir(stim_src_str);
-%         allnames = {allfiles.name}.';
-%         M = length(allnames);
-%         
-%         good_str   = contains(allnames,'trial');
-%         for kk=1:M
-%             if good_str(kk) == 1
-%                 cd(stim_src_str)
-%                 tmp_trial  = load(allnames{kk});
-%                 field      = fieldnames(tmp_trial);
-%                 tmp_trial  = getfield(tmp_trial, field{1});
         tmp_good_elec = Classify_Electrodes(stim_src_str, threshold,...
-                                              eta, window_len,electrodes_num,...
-                                              percent_trial, percent_stim,...
-                                              bad_trial);
+                                      eta, window_len,electrodes_num,...
+                                      percent_trial, percent_stim,...
+                                      bad_trial);
         good_electrodes = intersect(good_electrodes, tmp_good_elec);
-%             end
-%         end
     end
 end
 
 bad_electrodes = setdiff(1:electrodes_num, good_electrodes);
 
 % second loop for saving the data of the good electrodes only
+disp('    --Saving the data with the good electrodes...');
 for ii = 1:N
     for jj = stims_vec
         stim_src_str  = [direct, '\', subj_names{ii},...
-                                        '\Stim_', num2str(jj), '\clean'];
+                                    '\Stim_', num2str(jj), '\clean'];
         stim_dest_str = [direct, '\', subj_names{ii},...
-                                        '\Stim_', num2str(jj), '\good_data'];
+                                    '\Stim_', num2str(jj), '\good_data'];
         
         allfiles = dir(stim_src_str);
         allnames = {allfiles.name}.';
