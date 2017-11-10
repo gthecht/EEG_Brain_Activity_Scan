@@ -1,4 +1,4 @@
-function [] = Clear_Electrodes( direct, subj_names, stims_vec )
+function [] = Clear_Electrodes( direct, subj_names, stims_vec, dir_stack )
 % This function will take the clean data we managed to save earlier and
 % then find out whether there are bad electrodes in the data. If there are
 % ones who are bad, it will be removed from all data. Finally we will save
@@ -24,8 +24,7 @@ good_electrodes = 1:electrodes_num; % finding the good electrodes by
 % First loop for pulling out the good electrodes of each trial
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\', subj_names{ii},...
-                                        '\Stim_', num2str(jj), '\clean'];
+        stim_src_str  = [dir_stack{ii,find(stims_vec == jj)}, '\clean'];
         tmp_good_elec = Classify_Electrodes(stim_src_str, threshold,...
                                       eta, window_len,electrodes_num,...
                                       percent_trial, percent_stim,...
@@ -40,10 +39,8 @@ bad_electrodes = setdiff(1:electrodes_num, good_electrodes);
 disp('    --Saving the data with the good electrodes...');
 for ii = 1:N
     for jj = stims_vec
-        stim_src_str  = [direct, '\', subj_names{ii},...
-                                    '\Stim_', num2str(jj), '\clean'];
-        stim_dest_str = [direct, '\', subj_names{ii},...
-                                    '\Stim_', num2str(jj), '\good_data'];
+        stim_src_str  = [dir_stack{ii,find(stims_vec == jj)}, '\clean'];
+        stim_dest_str = [dir_stack{ii,find(stims_vec == jj)}, '\good_data'];
         
         allfiles = dir(stim_src_str);
         allnames = {allfiles.name}.';

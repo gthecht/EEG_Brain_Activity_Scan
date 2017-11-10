@@ -1,4 +1,4 @@
-function [ output_args ] = Clean_Stims( source_direct, edited_EEG_data, subj_names, stims_vec )
+function [ output_args ] = Clean_Stims( source_direct, subj_names, stims_vec, dir_stack )
 % Recieves the Source and destination cirectories, and the subject names,
 % and cleans out the data, saving it in the appropriate direc. in the
 % destination. Also downsamples and cuts in special manner for
@@ -13,8 +13,7 @@ load('BPF.mat');
 for ii = 1:N
     for jj = stims_vec
         stim_src_str  = [source_direct, '\', subj_names{ii}, '\Stim_', num2str(jj)];
-        stim_dest_str = [edited_EEG_data, '\', subj_names{ii}, '\Stim_', ...
-                                                num2str(jj), '\clean'];
+        stim_dest_str = [dir_stack{ii,find(stims_vec == jj)}, '\clean'];
         % Cleaning the data and downsampling it
 
         allfiles = dir(stim_src_str);

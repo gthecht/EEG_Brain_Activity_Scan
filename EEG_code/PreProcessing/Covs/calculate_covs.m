@@ -2,7 +2,14 @@ function [] = calculate_covs( edited_EEG_data, stims_vec )
 % calculating the cov matrices of the signals for subjects in
 % "edited_EEG_data_dir".
 % Stims is a cell with the names of the stims
-stims_cell = num2cell(stims_vec);
+for ii = 1:numel(stims_vec)
+    stimstr = num2str(stims_vec(ii));
+	if length(stimstr) == 1
+        stimstr = ['0',stimstr];
+    end
+    stims_cell{ii} = stimstr;
+end
+
 subj_names = find_subject_names( edited_EEG_data);
 N          = length(subj_names);
 subj_dir   = [];

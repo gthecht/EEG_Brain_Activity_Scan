@@ -30,20 +30,20 @@ cd(dest_direct);
 stims_vec = [1 2 3 11 12 13 14 15 16];
 % Making directory tree
 subj_names = find_subject_names( source_direct );
-make_dir_tree( dest_direct, subj_names, stims_vec );
+dir_stack = make_dir_tree( dest_direct, subj_names, stims_vec );
 % edited_EEG_data path:
 edited_EEG_data = [dest_direct, '\edited_EEG_data'];
 
 %% Cleaning the data and downsampling it
 disp('    --Cleaning and downsampling data...');
 tic
-Clean_Stims( source_direct, edited_EEG_data, subj_names, stims_vec );
+Clean_Stims( source_direct, subj_names, stims_vec, dir_stack );
 toc
 
 %% Clearing out the bad electrodes
 disp('    --Clearing out the bad electrodes...');
 tic
-Clear_Electrodes( edited_EEG_data, subj_names, stims_vec );
+Clear_Electrodes( edited_EEG_data, subj_names, stims_vec, dir_stack );
 toc
 
 %% cov matrices:

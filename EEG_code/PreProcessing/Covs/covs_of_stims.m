@@ -1,7 +1,7 @@
 function [] = covs_of_stims(stim, subj_dir)
 % calculates and saves the cov matrices for stim, in subj_dir:
-src_dir  = [subj_dir, '\Stim_',num2str(stim), '\good_data'];
-dest_dir = [subj_dir, '\Stim_',num2str(stim), '\cov'];
+src_dir  = [subj_dir, '\Stim_',stim, '\good_data'];
+dest_dir = [subj_dir, '\Stim_',stim, '\cov'];
 
 %% Making the covs:
 

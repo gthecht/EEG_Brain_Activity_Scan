@@ -72,8 +72,14 @@ toc
 %% Running TSNE on the RIemannian vectors
 % [RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
 %% Now we'll run a diffusion map
-[ diffusion_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
-disp('    --wrote down diffusion maps');
+if sum(dat_lengths(:)) < 1500
+    [ diff_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
+    diffusion_matrix = diff_matrix*diffusion_eig_vals;
+    disp('    --wrote down diffusion maps');
+else
+    diffusion_matrix = zeros(sum(dat_lengths(:)),1);
+    disp('    --too many points for diffusion maps');
+end
 toc
 %% saving the data
 data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
