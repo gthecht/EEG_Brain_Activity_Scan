@@ -14,7 +14,7 @@ data_cell = load_SVMdata();
 % struct named 'data_struct'. This has the description above.
 
 %% Preparing for SVM:
-[dim, leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...% use all dimensions, but remember to multiply by the eigenvalue
+[leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...
                     choose_learning_aspects(data_cell{1}.data_struct);
 %% Beginning cells:
 n = size(leftout,1);
@@ -43,8 +43,8 @@ for ii = 1:n
     % SVM_pca_sh    = fitclinear(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end));
 
     % testing and checking outcome:
-    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii}(:,1:dim));
-    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii}(:,dim + 2));
+    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii});
+    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii});
 end
 %% To do next:
 % use the app to export training models
