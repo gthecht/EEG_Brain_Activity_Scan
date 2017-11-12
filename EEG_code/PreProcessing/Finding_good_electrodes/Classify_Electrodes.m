@@ -26,8 +26,8 @@ for kk=1:M
         
         % Threshold condition
         [electrodes_num, trial_len] = size(tmp_trial);
-        out_of_bound = (abs(tmp_trial) > threshold);
-        tmp_bad_electrodes = sum(out_of_bound, 2);
+%         out_of_bound = (abs(tmp_trial) > threshold);
+%         tmp_bad_electrodes = sum(out_of_bound, 2);
 
         % Window filtering condition
         ones_window = ones(1,window_len);
@@ -35,7 +35,8 @@ for kk=1:M
         local_mean_filted = imfilter(tmp_trial, ones_window) / window_len;
         local_data_corr  = (tmp_trial - local_mean_filted) ./ local_std_filted;
         local_bad_elec = local_data_corr > eta;
-        tmp_bad_electrodes = tmp_bad_electrodes + sum(local_bad_elec, 2);
+%         tmp_bad_electrodes = tmp_bad_electrodes + sum(local_bad_elec, 2);
+        tmp_bad_electrodes = sum(local_bad_elec, 2);
 
         % All signal condition
         std_all = std(tmp_trial,0,1);
