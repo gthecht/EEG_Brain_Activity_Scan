@@ -67,12 +67,12 @@ disp('    --found Riemanien mean');
 toc
 
 %% Running PCA on the Riemannian vectors
-[pca_vec, PCA_type_label] = PCA_map( cov_mat, dat_lengths, legend_cell, label);
+[pca_vec, type_label] = PCA_map( cov_mat, dat_lengths, legend_cell, label);
 
 %% Running TSNE on the RIemannian vectors
 % [RSNE_vec, TSNE_type_label] = TSNE_map( cov_mat, dat_lengths, legend_cell, label);
 %% Now we'll run a diffusion map
-if sum(dat_lengths(:)) < 1500
+if sum(dat_lengths(:)) < 15000
     [ diff_matrix, diffusion_eig_vals, type_label ] = Diff_map( cov_mat, dat_lengths, legend_cell, label);
     diffusion_matrix = diff_matrix*diffusion_eig_vals;
     disp('    --wrote down diffusion maps');
@@ -81,6 +81,7 @@ else
     disp('    --too many points for diffusion maps');
 end
 toc
+
 %% saving the data
 data_struct = struct('subjects', cell2mat(subj_names), 'stimulations', cell2mat(stim_names), ...
     'diffusion_matrix', diffusion_matrix, 'PCA_matrix', pca_vec, 'labels',...
