@@ -1,23 +1,25 @@
-function [dim, leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...
+function [leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...
     choose_learning_aspects(data_struct)
 % Choose number of dimensions to learn on, and also how many subjects to
 % leave out each time.
 % Also makes a matrix of which the rows are the subjects to be left out each
 % time, by taking all the different options of leaving the sick people out,
 % and adding random healthy people.
-prompt={'How many dimensions do you want? (enter number)'};
-dir_title   = 'SVM dimensions';
-dim_cell    = inputdlg(prompt, dir_title);
-dim         = str2double(dim_cell{1});
+
+%% picking dimensions:
+% prompt={'How many dimensions do you want? (enter number)'};
+% dir_title   = 'SVM dimensions';
+% dim_cell    = inputdlg(prompt, dir_title);
+% dim         = str2double(dim_cell{1});
 
 %% Build feature matrix (with labels at the end - both the sick/healthy
 % label, and the type label:
-diff_features = data_struct.diffusion_matrix(:,2:dim+1);
-% pca_features  = data_struct.pca_vec(:,1:dim);
+diff_features = data_struct.diffusion_matrix(:,2:end);
+pca_features  = data_struct.PCA_matrix;
 type_vec   = data_struct.type_labels';
 sick_vec   = data_struct.labels';
 diff_mat   = [diff_features, type_vec, sick_vec'];
-pca_mat = 0; % pca_mat    = [ pca_features, type_vec, sick_vec'];
+pca_mat    = [ pca_features, type_vec, sick_vec'];
 %% leave out sick and healthy subjects for testing
 sick_indicator       = contains(num2cell(data_struct.subjects(:,1)), 'S');  % indicator for sick subjects
 prompt     = {'number of sick to leave out:'; 'number of healthy to leave out:'};
