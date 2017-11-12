@@ -43,8 +43,8 @@ for ii = 1:n
     % SVM_pca_sh    = fitclinear(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end));
 
     % testing and checking outcome:
-    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii});
-    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii});
+    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii}(:, 1:end-2));
+    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii}(:, end));
 end
 %% To do next:
 % use the app to export training models
