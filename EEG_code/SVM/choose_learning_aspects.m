@@ -15,7 +15,7 @@ sick_vec   = data_struct.labels';
 diff_mat   = [diff_features, type_vec, sick_vec'];
 pca_mat    = [ pca_features, type_vec, sick_vec'];
 %% leave out sick and healthy subjects for testing
-% sick_indicator       = contains(num2cell(data_struct.subjects(:,1)), 'S');  % indicator for sick subjects
+sick_indicator       = contains(num2cell(data_struct.subjects(:,1)), 'S');  % indicator for sick subjects
 % prompt     = {'number of sick to leave out:'; 'number of healthy to leave out:'};
 % dir_title  = 'Leave out';
 % leave_cell = inputdlg(prompt, dir_title);
