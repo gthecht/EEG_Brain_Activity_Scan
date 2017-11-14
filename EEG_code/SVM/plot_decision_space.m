@@ -18,7 +18,8 @@ figure(); hold on
 scatter3(X(:), Y(:), Z(:), 1, decision(:));
 scatter3(given_points(:,1), given_points(:,2),...
   given_points(:,3), 50, 2+diff_mat(:,end));
-colormap('cool');
+colormap('lines');
+caxis([0,4]);
 title(description);
 end
 

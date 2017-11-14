@@ -6,12 +6,6 @@ function [leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...
 % time, by taking all the different options of leaving the sick people out,
 % and adding random healthy people.
 
-%% picking dimensions:
-% prompt={'How many dimensions do you want? (enter number)'};
-% dir_title   = 'SVM dimensions';
-% dim_cell    = inputdlg(prompt, dir_title);
-% dim         = str2double(dim_cell{1});
-
 %% Build feature matrix (with labels at the end - both the sick/healthy
 % label, and the type label:
 diff_features = data_struct.diffusion_matrix(:,2:1001);
@@ -21,12 +15,12 @@ sick_vec   = data_struct.labels';
 diff_mat   = [diff_features, type_vec, sick_vec'];
 pca_mat    = [ pca_features, type_vec, sick_vec'];
 %% leave out sick and healthy subjects for testing
-sick_indicator       = contains(num2cell(data_struct.subjects(:,1)), 'S');  % indicator for sick subjects
-prompt     = {'number of sick to leave out:'; 'number of healthy to leave out:'};
-dir_title  = 'Leave out';
-leave_cell = inputdlg(prompt, dir_title);
-s_out      = str2double(leave_cell{1});
-h_out      = str2double(leave_cell{2});
+% sick_indicator       = contains(num2cell(data_struct.subjects(:,1)), 'S');  % indicator for sick subjects
+% prompt     = {'number of sick to leave out:'; 'number of healthy to leave out:'};
+% dir_title  = 'Leave out';
+% leave_cell = inputdlg(prompt, dir_title);
+s_out      = 1; % str2double(leave_cell{1});
+h_out      = 1; % str2double(leave_cell{2});
 
 s_index    = find(sick_indicator);
 h_index    = find(~sick_indicator);
