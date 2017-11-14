@@ -18,45 +18,88 @@ data_cell = load_SVMdata();
                     choose_learning_aspects(data_cell{1}.data_struct);
 %% Beginning cells:
 n = size(leftout,1);
-test_diff_cell  = cell(n,1);
-train_diff_cell = cell(n,1);
-test_pca_cell   = cell(n,1);
-train_pca_cell  = cell(n,1);
+
 % and SVM models:
 SVM_diff_type  = cell(n,1);
 SVM_diff_sh    = cell(n,1);
-SVM_diff_test  = cell(n,1);
-confmat_diff   = cell(n,1);
+gaussSVM_diff_test  = cell(n,1);
+% diffusion:
+test_diff_cell  = cell(n,1);
+train_diff_cell = cell(n,1);
+
+diff_SVM_lin_model = cell(n,1);
+diff_SVM_cub_model = cell(n,1);
+diff_SVM_med_gauss_model = cell(n,1);
+
+lin_confmat_diff   = cell(n,1);
+cub_confmat_diff   = cell(n,1);
+gauss_confmat_diff   = cell(n,1);
+% PCA:
+test_pca_cell   = cell(n,1);
+train_pca_cell  = cell(n,1);
+
+pca_SVM_lin_model = cell(n,1);
+pca_SVM_cub_model = cell(n,1);
+pca_SVM_med_gauss_model = cell(n,1);
+
+lin_confmat_pca   = cell(n,1);
+cub_confmat_pca   = cell(n,1);
+gauss_confmat_pca   = cell(n,1);
 %% Running over all rows:
 for ii = 1:n
     [test_diff_cell{ii}, train_diff_cell{ii}, test_pca_cell{ii}, train_pca_cell{ii}] = ...
             prepareSVM( diff_mat, pca_mat, leftout(ii,:), type_vec, stim_num);
-    % building SVM models:
-    % model according to types - subject-stim, over diff_maps:
-    SVM_diff_type{ii}  = fitcecoc(train_diff_cell{ii}(:,1:end-2), train_diff_cell{ii}(:,end-1));
+    %% building SVM models:
     % model according to sick/healthy, over diff_maps:
-    SVM_diff_sh{ii}    = fitclinear(train_diff_cell{ii}(:,1:end-2), train_diff_cell{ii}(:,end));
+% %     [diff_SVM_lin_model{ii}, ~] = train_diff_SVM_linear(train_diff_cell{ii});
+% %     [diff_SVM_cub_model{ii}, ~] = train_diff_SVM_cubic(train_diff_cell{ii});
+% %     [diff_SVM_med_gauss_model{ii}, ~] = train_diff_SVM_med_gauss(train_diff_cell{ii});
 
-    % % model according to types - subject-stim, over pca_maps:
-    % SVM_pca_type  = fitcecoc(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end-1));
-    % % model according to sick/healthy, over pca_maps:
-    % SVM_pca_sh    = fitclinear(test_pca_cell{ii}(:,1:end-2), test_pca_cell{ii}(:,end));
-
-    % testing and checking outcome:
-    SVM_diff_test{ii} = predict(SVM_diff_sh{ii}, test_diff_cell{ii}(:, 1:end-2));
-    confmat_diff{ii}  = confusionmat(SVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+    % model according to sick/healthy, over pca_maps:
+    [pca_SVM_lin_model{ii}, ~] = train_pca_SVM_linear(train_pca_cell{ii});
+    [pca_SVM_cub_model{ii}, ~] = train_pca_SVM_cubic(train_pca_cell{ii});
+    [pca_SVM_med_gauss_model{ii}, ~] = train_pca_SVM_med_gauss(train_pca_cell{ii});
+    %% testing and checking outcome:
+    % diffusion maps:
+%     % Linear:
+%     linSVM_diff_test{ii} = diff_SVM_lin_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+%     lin_confmat_diff{ii}  = confusionmat(linSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+%     plot_decision_space(diff_SVM_lin_model{ii}, diff_mat, 'Linear SVM model');
+%     % Quad:
+%     cubSVM_diff_test{ii} = diff_SVM_cub_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+%     cub_confmat_diff{ii}  = confusionmat(cubSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+%     plot_decision_space(diff_SVM_cub_model{ii}, diff_mat, 'Cubic SVM model');
+%     % Gauss:
+%     gaussSVM_diff_test{ii} = diff_SVM_med_gauss_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+%     gauss_confmat_diff{ii}  = confusionmat(gaussSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+%     plot_decision_space(diff_SVM_med_gauss_model{ii}, diff_mat, 'medium Gaussian SVM model');
+%     % PCA:
+    % Linear:
+    linSVM_pca_test{ii} = pca_SVM_lin_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
+    lin_confmat_pca{ii}  = confusionmat(linSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
+    plot_decision_space(pca_SVM_lin_model{ii}, pca_mat, 'PCA Linear SVM model');
+    % Quad:
+    cubSVM_pca_test{ii} = pca_SVM_cub_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
+    cub_confmat_pca{ii}  = confusionmat(cubSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
+    plot_decision_space(pca_SVM_cub_model{ii}, pca_mat, 'PCA Cubic SVM model');
+    % Gauss:
+    gaussSVM_pca_test{ii} = pca_SVM_med_gauss_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
+    gauss_confmat_pca{ii}  = confusionmat(gaussSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
+    plot_decision_space(pca_SVM_med_gauss_model{ii}, pca_mat, 'PCA medium Gaussian SVM model');
 end
-%% To do next:
-% use the app to export training models
-% show the decision space - to see why its not good - By coloring the
-% space.
-% Don't use only linear SVM
-% Maybe look on leave one subject out
+%% saving the data
+SVM_struct = struct('cub_confmat_diff', cub_confmat_diff, 'lin_confmat_diff', lin_confmat_diff, ...
+'gauss_confmat_diff', gauss_confmat_diff, 'diff_SVM_lin_model', diff_SVM_lin_model,...
+'diff_SVM_cub_model', diff_SVM_cub_model, 'diff_SVM_med_gauss_model', diff_SVM_med_gauss_model,...
+'cub_confmat_pca', cub_confmat_pca, 'lin_confmat_pca', lin_confmat_pca, ...
+'gauss_confmat_pca', gauss_confmat_pca, 'pca_SVM_lin_model', pca_SVM_lin_model,...
+'pca_SVM_cub_model', pca_SVM_cub_model, 'pca_SVM_med_gauss_model', pca_SVM_med_gauss_model);
 
 
-
-% NOTE
-% fitcsvm trains or cross-validates a support vector machine (SVM) model for two-class (binary) classification on a low- through moderate-dimensional predictor data set. fitcsvm supports mapping the predictor data using kernel functions, and supports SMO, ISDA, or L1 soft-margin minimization via quadratic programming for objective-function minimization.
-% To train a linear SVM model for binary classification on a high-dimensional data set, that is, data sets that include many predictor variables, use fitclinear instead.
-% For multiclass learning by combining binary SVM models, use error-correcting output codes (ECOC). For more details, see fitcecoc.
-% To train an SVM regression model, see fitrsvm for low- through moderate-dimensional predictor data sets, or fitrlinear for high-dimensional data sets.
+prompt={'Enter save destination directory:', 'Choose filename:'};
+dir_title  = 'save';
+dest_cell   = inputdlg(prompt,dir_title);
+dest_dir    = dest_cell{1};
+filename    = [dest_cell{2},'.mat'];
+cd(dest_dir);
+save(filename, 'SVM_struct');

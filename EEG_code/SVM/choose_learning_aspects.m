@@ -14,8 +14,8 @@ function [leftout, sick_indicator, diff_mat, pca_mat, type_vec, stim_num] = ...
 
 %% Build feature matrix (with labels at the end - both the sick/healthy
 % label, and the type label:
-diff_features = data_struct.diffusion_matrix(:,2:end);
-pca_features  = data_struct.PCA_matrix;
+diff_features = data_struct.diffusion_matrix(:,2:1001);
+pca_features  = data_struct.PCA_matrix(:,1:200);
 type_vec   = data_struct.type_labels';
 sick_vec   = data_struct.labels';
 diff_mat   = [diff_features, type_vec, sick_vec'];
