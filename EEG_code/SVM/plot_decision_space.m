@@ -20,6 +20,7 @@ scatter3(given_points(:,1), given_points(:,2),...
   given_points(:,3), 50, 2+diff_mat(:,end));
 colormap('lines');
 caxis([0,4]);
+xlabel('d_1'); ylabel('d_2'); zlabel('d_3');
 title(description);
 end
 
