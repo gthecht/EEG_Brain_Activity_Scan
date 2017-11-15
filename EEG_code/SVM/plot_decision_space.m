@@ -12,7 +12,7 @@ vx = linspace(xlimits(1), xlimits(2), n);
 vy = linspace(ylimits(1), ylimits(2), n);
 vz = linspace(zlimits(1), zlimits(2), n);
 [X, Y, Z] = meshgrid(vx, vy, vz);
-decision_area = [X(:), Y(:), Z(:), zeros(numel(X),size(diff_mat,2)-5)];
+decision_area = [X(:), Y(:), Z(:)];
 decision  = SVM_model.predictFcn(decision_area);
 figure(); hold on
 scatter3(X(:), Y(:), Z(:), 1, decision(:));

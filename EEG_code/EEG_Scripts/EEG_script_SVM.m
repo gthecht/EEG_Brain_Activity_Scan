@@ -29,7 +29,7 @@ train_diff_cell = cell(n,1);
 
 diff_SVM_lin_model = cell(n,1);
 diff_SVM_cub_model = cell(n,1);
-diff_SVM_med_gauss_model = cell(n,1);
+diff_SVM_gauss_model = cell(n,1);
 
 lin_confmat_diff   = cell(n,1);
 cub_confmat_diff   = cell(n,1);
@@ -40,7 +40,7 @@ train_pca_cell  = cell(n,1);
 
 pca_SVM_lin_model = cell(n,1);
 pca_SVM_cub_model = cell(n,1);
-pca_SVM_med_gauss_model = cell(n,1);
+pca_SVM_gauss_model = cell(n,1);
 
 lin_confmat_pca   = cell(n,1);
 cub_confmat_pca   = cell(n,1);
@@ -51,29 +51,28 @@ for ii = 1:n
             prepareSVM( diff_mat, pca_mat, leftout(ii,:), type_vec, stim_num);
     %% building SVM models:
     % model according to sick/healthy, over diff_maps:
-% %     [diff_SVM_lin_model{ii}, ~] = train_diff_SVM_linear(train_diff_cell{ii});
-% %     [diff_SVM_cub_model{ii}, ~] = train_diff_SVM_cubic(train_diff_cell{ii});
-% %     [diff_SVM_med_gauss_model{ii}, ~] = train_diff_SVM_med_gauss(train_diff_cell{ii});
-
+    [diff_SVM_lin_model{ii}, ~]  = train_SVM_linear(train_diff_cell{ii});
+    [diff_SVM_cub_model{ii}, ~]   = train_SVM_cubic(train_diff_cell{ii});
+    [diff_SVM_gauss_model{ii}, ~] = train_SVM_gauss(train_diff_cell{ii});
     % model according to sick/healthy, over pca_maps:
-    [pca_SVM_lin_model{ii}, ~] = train_pca_SVM_linear(train_pca_cell{ii});
-    [pca_SVM_cub_model{ii}, ~] = train_pca_SVM_cubic(train_pca_cell{ii});
-    [pca_SVM_med_gauss_model{ii}, ~] = train_pca_SVM_med_gauss(train_pca_cell{ii});
+    [pca_SVM_lin_model{ii}, ~]   = train_SVM_linear(train_pca_cell{ii});
+    [pca_SVM_cub_model{ii}, ~]   = train_SVM_cubic(train_pca_cell{ii});
+    [pca_SVM_gauss_model{ii}, ~] = train_SVM_gauss(train_pca_cell{ii});
     %% testing and checking outcome:
     % diffusion maps:
-%     % Linear:
-%     linSVM_diff_test{ii} = diff_SVM_lin_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
-%     lin_confmat_diff{ii}  = confusionmat(linSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
-%     plot_decision_space(diff_SVM_lin_model{ii}, diff_mat, 'Linear SVM model');
-%     % Quad:
-%     cubSVM_diff_test{ii} = diff_SVM_cub_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
-%     cub_confmat_diff{ii}  = confusionmat(cubSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
-%     plot_decision_space(diff_SVM_cub_model{ii}, diff_mat, 'Cubic SVM model');
-%     % Gauss:
-%     gaussSVM_diff_test{ii} = diff_SVM_med_gauss_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
-%     gauss_confmat_diff{ii}  = confusionmat(gaussSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
-%     plot_decision_space(diff_SVM_med_gauss_model{ii}, diff_mat, 'medium Gaussian SVM model');
-%     % PCA:
+    % Linear:
+    linSVM_diff_test{ii} = diff_SVM_lin_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+    lin_confmat_diff{ii}  = confusionmat(linSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+    plot_decision_space(diff_SVM_lin_model{ii}, diff_mat, 'Diff Linear SVM model');
+    % Quad:
+    cubSVM_diff_test{ii} = diff_SVM_cub_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+    cub_confmat_diff{ii}  = confusionmat(cubSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+    plot_decision_space(diff_SVM_cub_model{ii}, diff_mat, 'Diff Cubic SVM model');
+    % Gauss:
+    gaussSVM_diff_test{ii} = diff_SVM_gauss_model{ii}.predictFcn(test_diff_cell{ii}(:, 1:end-2));
+    gauss_confmat_diff{ii}  = confusionmat(gaussSVM_diff_test{ii}, test_diff_cell{ii}(:, end));
+    plot_decision_space(diff_SVM_gauss_model{ii}, diff_mat, 'Diff medium Gaussian SVM model');
+    % PCA:
     % Linear:
     linSVM_pca_test{ii} = pca_SVM_lin_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
     lin_confmat_pca{ii}  = confusionmat(linSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
@@ -83,21 +82,25 @@ for ii = 1:n
     cub_confmat_pca{ii}  = confusionmat(cubSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
     plot_decision_space(pca_SVM_cub_model{ii}, pca_mat, 'PCA Cubic SVM model');
     % Gauss:
-    gaussSVM_pca_test{ii} = pca_SVM_med_gauss_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
+    gaussSVM_pca_test{ii} = pca_SVM_gauss_model{ii}.predictFcn(test_pca_cell{ii}(:, 1:end-2));
     gauss_confmat_pca{ii}  = confusionmat(gaussSVM_pca_test{ii}, test_pca_cell{ii}(:, end));
-    plot_decision_space(pca_SVM_med_gauss_model{ii}, pca_mat, 'PCA medium Gaussian SVM model');
+    plot_decision_space(pca_SVM_gauss_model{ii}, pca_mat, 'PCA medium Gaussian SVM model');
 end
 %% saving the data
-SVM_struct = struct('cub_confmat_diff', cub_confmat_diff, 'lin_confmat_diff', lin_confmat_diff, ...
-'gauss_confmat_diff', gauss_confmat_diff,...
-'cub_confmat_pca', cub_confmat_pca, 'lin_confmat_pca', lin_confmat_pca, ...
-'gauss_confmat_pca', gauss_confmat_pca);
-
-
+confmats = cell(5,6);
+confmats(:,1) = lin_confmat_diff;
+confmats(:,2) = cub_confmat_diff;
+confmats(:,3) = gauss_confmat_diff;
+confmats(:,4) = lin_confmat_pca;
+confmats(:,5) = cub_confmat_pca;
+confmats(:,6) = gauss_confmat_pca;
+confmats_table = cell2table(confmats, 'VariableNames', {'linear_diff',...
+    'cubic_diff', 'gaussian_diff', 'linear_pca', 'cubic_pca', 'gaussian_pca'},...
+    'RowNames', {'S1_out', 'S2_out', 'S3_out', 'S4_out', 'S5_out'});
 prompt={'Enter save destination directory:', 'Choose filename:'};
 dir_title  = 'save';
 dest_cell   = inputdlg(prompt,dir_title);
 dest_dir    = dest_cell{1};
 filename    = [dest_cell{2},'.mat'];
 cd(dest_dir);
-save(filename, 'SVM_struct');
+save(filename, 'confmats_table');
