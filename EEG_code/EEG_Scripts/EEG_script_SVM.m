@@ -9,7 +9,7 @@ clear; clc;
     %   'diffusion_matrix', diffusion_matrix, 'PCA_matrix', pca_vec, 'labels', label_vec, 'type_labels', type_label);
 
 % Loading data:
-data_cell = load_SVMdata(); 
+[data_cell, picked_files] = load_SVMdata(); 
 % this cell contains structs, of different names, each containing the 
 % struct named 'data_struct'. This has the description above.
 

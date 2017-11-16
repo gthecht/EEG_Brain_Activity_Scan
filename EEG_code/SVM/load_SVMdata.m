@@ -1,4 +1,4 @@
-function [data_cell] = load_SVMdata()
+function [data_cell, picked_files] = load_SVMdata()
 % Helps load data matrices on which we want to use the SVM.
 % Asks for directory, and then allows to pick multiple files from there.
 
